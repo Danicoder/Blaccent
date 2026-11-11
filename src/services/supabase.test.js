@@ -11,4 +11,10 @@ describe('checkSupabaseConnection', () => {
 
     await expect(checkSupabaseConnection()).resolves.toBeUndefined()
   })
+
+  it('rechaza con error cuando Supabase responde 401', async () => {
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue({ ok: false, status: 401 }))
+
+    await expect(checkSupabaseConnection()).rejects.toThrow('401')
+  })
 })
