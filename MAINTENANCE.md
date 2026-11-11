@@ -54,7 +54,7 @@ Otros comandos: `npm run build` (genera `dist/`) y `npm run preview` (sirve el b
 
 | Servicio | Propietario actual | Estado |
 |----------|--------------------|--------|
-| Supabase (proyecto `gnkbslmgkadvphzrtewj`) | Cuenta personal del creador, con una cuenta de empresa Accenture invitada como Owner | ⚠️ Incumple el principio III: debe pasar a una cuenta corporativa genérica |
+| Supabase (proyecto de la app) | Cuenta personal del creador, con una cuenta de empresa Accenture invitada como Owner | ⚠️ Incumple el principio III: debe pasar a una cuenta corporativa genérica |
 | GitHub (repositorio de la organización) | Pendiente de definir | ⚠️ Pendiente |
 | Vercel / Netlify | Pendiente de definir (historia 1b) | ⚠️ Pendiente |
 

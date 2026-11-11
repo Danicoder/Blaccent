@@ -1,10 +1,10 @@
 // @vitest-environment jsdom
 import { describe, it, expect, vi } from 'vitest'
 import { mount, flushPromises } from '@vue/test-utils'
-import App from './App.vue'
-import { checkSupabaseConnection } from './services/supabase.js'
+import App from '../App.vue'
+import { checkSupabaseConnection } from '../services/supabase.js'
 
-vi.mock('./services/supabase.js', () => ({
+vi.mock('../services/supabase.js', () => ({
   checkSupabaseConnection: vi.fn(),
 }))
 
