@@ -113,7 +113,8 @@ Procedimiento:
 - El importe y las condiciones aceptadas quedan bloqueados tras confirmar la plaza. No se incrementan ni recalculan por cancelaciones, ausencias o cambios de ocupación de otros usuarios.
 - El pasajero puede cancelar hasta la salida. Con al menos dos horas de antelación la cancelación es ordinaria; con menos de dos horas se permite y queda marcada como tardía.
 - El conductor puede registrar como no presentado a un pasajero con plaza confirmada que no se presente y no haya cancelado.
-- Cancelaciones y ausencias se conservan durante seis meses. Una ausencia afecta más negativamente a la fiabilidad que una cancelación tardía; la fórmula numérica y la visibilidad del indicador siguen pendientes.
+- Cancelaciones y ausencias se conservan durante seis meses. Fiabilidad = (viajes completados + cancelaciones ordinarias + 0,5 × cancelaciones tardías) / reservas confirmadas evaluables × 100. Ausencia = 0 puntos. Mostrar solo con al menos cinco reservas evaluables; por debajo, «Datos insuficientes».
+- El conductor que registró una ausencia puede deshacerla durante los diez minutos siguientes; la corrección conserva trazabilidad y deja de computar como ausencia.
 - **No integrar pagos:** Blaccent no procesa, custodia ni distribuye dinero. No añadir pasarelas ni proveedores externos de pago. Los acuerdos económicos se realizan fuera de la plataforma.
 
 Estos requisitos son documentación funcional aprobada; no implican que las funciones estén implementadas en la versión actual.
