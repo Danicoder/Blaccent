@@ -111,7 +111,7 @@ No se puede confirmar más plazas de las disponibles. La aceptación de ida no r
 
 ### 6.1 Estado de decisión
 
-Está aprobada la necesidad de una política de cancelación explícita, pero **no está aprobado un plazo concreto**. La regla anterior de 24 horas y la caducidad de 30 días del historial no deben tratarse como vigentes.
+El plazo aprobado para la cancelación ordinaria por parte del pasajero es hasta dos horas antes de la hora de salida programada. La regla anterior de 24 horas y la caducidad de 30 días del historial quedan sustituidas. Sigue pendiente concretar si una cancelación dentro de las últimas dos horas se bloquea o se permite y marca como tardía.
 
 ### 6.2 Propuesta para revisión
 
@@ -120,7 +120,7 @@ La política debe distinguir cancelación por pasajero o conductor, cancelación
 Principios recomendados para la política:
 1. Liberar la plaza del tramo cancelado y actualizar su disponibilidad.
 2. No aumentar automáticamente la aportación de pasajeros restantes.
-3. Recalcular el reparto del parking solo según las condiciones que los pasajeros hayan aceptado y la política publicada.
+3. Mantener intactos los importes de parking ya aceptados por los pasajeros restantes; no recalcularlos cuando cambie la ocupación.
 4. No recalcular ni aumentar las aportaciones aceptadas por los pasajeros restantes.
 5. No procesar reembolsos ni pagos desde Blaccent; los acuerdos económicos se realizan fuera de la plataforma.
 6. Si cancela el conductor, informar a todos los pasajeros afectados.
