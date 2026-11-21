@@ -17,13 +17,14 @@ La fuente de verdad de principios y restricciones es [`constitution.md`](./const
 - El conductor puede registrar como no presentado a un pasajero con plaza confirmada que no acuda y no haya cancelado previamente.
 - Cancelaciones: el pasajero puede cancelar hasta la salida. Con al menos dos horas de antelación es ordinaria; con menos de dos horas está permitida y se marca como tardía.
 - El conductor puede marcar como no presentado a un pasajero con plaza confirmada que no acudió y no canceló previamente.
-- Cancelaciones y ausencias se conservan seis meses y alimentan un indicador de fiabilidad; una ausencia pesa más negativamente que una cancelación tardía.
+- Cancelaciones y ausencias se conservan seis meses. Fiabilidad = (viajes completados + cancelaciones en plazo + 0,5 × cancelaciones tardías) / reservas confirmadas evaluables × 100. Las ausencias aportan 0 puntos. Mostrar solo con al menos cinco reservas evaluables; por debajo, «Datos insuficientes».
+- El conductor que registró una ausencia puede deshacerla durante los diez minutos siguientes. La corrección deja de computar como ausencia y conserva trazabilidad.
 - Se mantienen ubicación en vivo durante el trayecto activo e historial.
 - Blaccent no procesa, custodia ni distribuye pagos y no integra proveedores de pago. Los acuerdos económicos se realizan fuera de la plataforma.
 
 ## Decisiones pendientes (no inventar ni dar por aprobadas)
 - Definir procedimiento y permisos para revisar o corregir una ausencia registrada incorrectamente.
-- Definir la ponderación numérica del indicador de fiabilidad y su visibilidad; mantener siempre mayor impacto negativo para una ausencia que para una cancelación tardía.
+- Definir quién puede consultar el indicador y si el usuario puede consultar su propio detalle.
 - Definir si las cancelaciones ordinarias tienen efecto en el indicador.
 - Definir eliminación/anonimización y tratamiento técnico de registros al cumplir seis meses.
 - Definir conceptos admisibles y unidad de cálculo del límite proporcional de gastos reales.
