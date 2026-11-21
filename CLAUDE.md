@@ -14,6 +14,7 @@ La fuente de verdad de principios y restricciones es [`constitution.md`](./const
 - Reparto de parking: una participación por ida, una por vuelta y dos por ida y vuelta; solo entre pasajeros que acepten el parking.
 - El importe y las condiciones económicas aceptadas por un pasajero quedan bloqueados. No pueden aumentar por cancelaciones, ausencias ni cambios de ocupación posteriores.
 - El conductor aprueba o rechaza las solicitudes.
+- El conductor puede registrar como no presentado a un pasajero con plaza confirmada que no acuda y no haya cancelado previamente.
 - Cancelaciones: el pasajero puede cancelar hasta la salida. Con al menos dos horas de antelación es ordinaria; con menos de dos horas está permitida y se marca como tardía.
 - El conductor puede marcar como no presentado a un pasajero con plaza confirmada que no acudió y no canceló previamente.
 - Cancelaciones y ausencias se conservan seis meses y alimentan un indicador de fiabilidad; una ausencia pesa más negativamente que una cancelación tardía.
