@@ -14,15 +14,16 @@ La fuente de verdad de principios y restricciones es [`constitution.md`](./const
 - Reparto de parking: una participación por ida, una por vuelta y dos por ida y vuelta; solo entre pasajeros que acepten el parking.
 - El importe y las condiciones económicas aceptadas por un pasajero quedan bloqueados. No pueden aumentar por cancelaciones, ausencias ni cambios de ocupación posteriores.
 - El conductor aprueba o rechaza las solicitudes.
-- Cancelaciones: plazo de referencia de dos horas antes de la salida; se registran con fecha, hora y trayecto. Menos de dos horas se etiqueta como tardía.
-- Cancelaciones y ausencias se conservan seis meses y alimentan un indicador de fiabilidad.
+- Cancelaciones: el pasajero puede cancelar hasta la salida. Con al menos dos horas de antelación es ordinaria; con menos de dos horas está permitida y se marca como tardía.
+- El conductor puede marcar como no presentado a un pasajero con plaza confirmada que no acudió y no canceló previamente.
+- Cancelaciones y ausencias se conservan seis meses y alimentan un indicador de fiabilidad; una ausencia pesa más negativamente que una cancelación tardía.
 - Se mantienen ubicación en vivo durante el trayecto activo e historial.
 - Blaccent no procesa, custodia ni distribuye pagos y no integra proveedores de pago. Los acuerdos económicos se realizan fuera de la plataforma.
 
 ## Decisiones pendientes (no inventar ni dar por aprobadas)
-- Confirmar si el sistema permite cancelar durante las últimas dos horas (marcando la cancelación como tardía) o si bloquea la acción. RF-005 y RF-008 requieren concretar este comportamiento.
-- Definir quién registra ausencias, en qué momento y cómo puede revisarse una ausencia incorrecta.
-- Definir fórmula, ponderaciones y visibilidad del indicador de fiabilidad.
+- Definir procedimiento y permisos para revisar o corregir una ausencia registrada incorrectamente.
+- Definir la ponderación numérica del indicador de fiabilidad y su visibilidad; mantener siempre mayor impacto negativo para una ausencia que para una cancelación tardía.
+- Definir si las cancelaciones ordinarias tienen efecto en el indicador.
 - Definir eliminación/anonimización y tratamiento técnico de registros al cumplir seis meses.
 - Definir conceptos admisibles y unidad de cálculo del límite proporcional de gastos reales.
 - No añadir multas, penalizaciones económicas ni pagos dentro de la app.
