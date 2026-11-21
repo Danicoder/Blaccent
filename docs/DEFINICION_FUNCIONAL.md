@@ -167,14 +167,7 @@ Los cambios de tarifas no deben alterar silenciosamente importes ya aceptados en
 
 ## 9. Pagos y cumplimiento
 
-No se activa todavía el cobro real ni la liquidación a conductores. Antes se debe validar:
-- Quién recibe los fondos y cómo se transfieren.
-- Qué entidad o persona asume las comisiones de procesamiento.
-- Cómo se gestionan reembolsos, pagos fallidos y conciliación.
-- Que el proveedor permite el modelo de pagos entre usuarios previsto.
-- El encaje legal en España en materia de movilidad colaborativa, gastos compartidos, intermediación, fiscalidad, protección de consumidores y protección de datos.
-
-No se añadirá una comisión de reserva sin aprobación expresa. Los servicios de pago pueden contradecir el requisito de coste cero; cualquier excepción requiere aprobación.
+Blaccent no procesa, custodia ni distribuye pagos. No integra pasarelas ni proveedores externos de pago. Los acuerdos económicos entre conductor y pasajeros se realizan fuera de la plataforma. La aplicación se limita a mostrar las estimaciones y condiciones aceptadas; no registra pagos, reembolsos, conciliaciones ni liquidaciones.
 
 ## 10. Privacidad y seguridad
 
