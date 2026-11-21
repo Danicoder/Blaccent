@@ -18,7 +18,7 @@ El coste estimado del parking de Panoramis es de 2 € para la ida y 2 € para 
 Una solicitud de reserva no confirma una plaza. El conductor acepta o rechaza cada solicitud. La disponibilidad se controla por tramo. El pasajero debe aceptar las condiciones económicas mostradas antes de confirmar su participación.
 
 ### VI. Cancelaciones y ausencias
-El pasajero puede cancelar hasta dos horas antes de la hora de salida programada. Las cancelaciones se registran con fecha, hora y trayecto. Antes de confirmar la cancelación, se informa al usuario de que quedará registrada y podrá utilizarse en el indicador de fiabilidad. Las cancelaciones realizadas con menos de dos horas de antelación se identifican como tardías. También se pueden registrar ausencias de pasajeros confirmados que no se presentan y no cancelan previamente. Las cancelaciones y ausencias se conservan durante seis meses y alimentan el indicador de fiabilidad. El procedimiento de registro de ausencias y el tratamiento operativo de una cancelación tardía deben seguir la definición funcional vigente.
+El pasajero puede cancelar en cualquier momento antes de la salida programada. Las cancelaciones realizadas con al menos dos horas de antelación se registran como ordinarias; las realizadas con menos de dos horas se permiten y se registran como tardías. Antes de confirmar, se informa al usuario de que la cancelación quedará registrada y podrá influir en su fiabilidad. El conductor puede registrar como ausencia a un pasajero con plaza confirmada que no se presente y no haya cancelado. Las cancelaciones y ausencias se conservan durante seis meses. En el indicador de fiabilidad, una ausencia tiene un impacto negativo mayor que una cancelación tardía; la ponderación numérica exacta sigue pendiente.
 
 ### VII. Acuerdos económicos fuera de la plataforma
 Blaccent puede mostrar importes estimados e información de reparto, pero no procesa, custodia ni distribuye pagos. No integra pasarelas ni proveedores externos de pago. Cualquier intercambio económico entre conductor y pasajeros se acuerda y realiza fuera de Blaccent, mediante los medios que las partes decidan.
@@ -45,9 +45,9 @@ La solución prioriza servicios gratuitos y serverless. Supabase Cloud proporcio
 - **Reparto del parking:** solo participan pasajeros que aceptan el coste; cada tramo se reparte entre los pasajeros de ese tramo. El criterio de participaciones es una por ida, una por vuelta y dos por ida y vuelta.
 - **Bloqueo económico:** el importe y condiciones aceptadas por el pasajero no aumentan ni se recalculan por cancelaciones, ausencias o cambios de ocupación posteriores.
 - **Reservas:** se permite solo ida, solo vuelta o ida y vuelta. Las plazas y estados se gestionan por tramo. La confirmación requiere aprobación del conductor y aceptación de las condiciones económicas.
-- **Cancelaciones:** el pasajero puede cancelar hasta dos horas antes de la salida. Se registran todas las cancelaciones; las realizadas con menos de dos horas se identifican como tardías.
-- **Ausencias:** se puede registrar como no presentado a un pasajero confirmado que no haya cancelado previamente.
-- **Fiabilidad:** se calcula a partir de cancelaciones y ausencias de los últimos seis meses. La fórmula y las reglas de visibilidad deben estar documentadas antes de implementarse.
+- **Cancelaciones:** el pasajero puede cancelar hasta la salida. Si faltan al menos dos horas, la cancelación es ordinaria; si faltan menos de dos horas, se permite y se marca como tardía.
+- **Ausencias:** el conductor puede registrar como no presentado a un pasajero confirmado que no haya cancelado previamente.
+- **Fiabilidad:** se calcula a partir de la actividad de los últimos seis meses. Una ausencia pesa más negativamente que una cancelación tardía. La fórmula numérica y las reglas de visibilidad quedan pendientes.
 - **Historial:** se conservan cancelaciones y ausencias durante seis meses desde que ocurren.
 - **Pagos:** no hay procesamiento, custodia ni distribución de fondos dentro de Blaccent. Los acuerdos económicos se realizan fuera de la plataforma.
 - **Ubicación en vivo:** geolocalización del navegador y Supabase Realtime durante trayectos activos; solo el conductor transmite y solo participantes autorizados consultan.
@@ -71,6 +71,6 @@ La solución prioriza servicios gratuitos y serverless. Supabase Cloud proporcio
 
 Toda enmienda debe actualizar este documento, incrementar su versión y registrar motivo y fecha. Las excepciones deben ser explícitas, acotadas y aprobadas.
 
-**Versión**: 1.2.0 | **Ratificada**: 2026-11-21 | **Última enmienda**: 2026-11-21
+**Versión**: 1.3.0 | **Ratificada**: 2026-11-21 | **Última enmienda**: 2026-11-21
 
-**Motivo de la enmienda 1.2.0**: incorporar los requisitos RF-001 a RF-015: parking estimado por tramo, bloqueo de importes aceptados, cancelaciones con umbral de dos horas, registro de cancelaciones y ausencias durante seis meses, indicador de fiabilidad y prohibición expresa de gestionar pagos desde la plataforma.
+**Motivo de la enmienda 1.3.0**: aclarar que las cancelaciones tardías están permitidas y se registran como tales; atribuir al conductor la capacidad de registrar ausencias; y establecer que una ausencia afecta más negativamente a la fiabilidad que una cancelación tardía. La ponderación numérica permanece pendiente.
