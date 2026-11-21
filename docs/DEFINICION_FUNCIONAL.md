@@ -111,11 +111,11 @@ No se puede confirmar más plazas de las disponibles. La aceptación de ida no r
 
 ### 6.1 Estado de decisión
 
-El plazo aprobado para la cancelación ordinaria por parte del pasajero es hasta dos horas antes de la hora de salida programada. La regla anterior de 24 horas y la caducidad de 30 días del historial quedan sustituidas. Sigue pendiente concretar si una cancelación dentro de las últimas dos horas se bloquea o se permite y marca como tardía.
+El pasajero puede cancelar en cualquier momento antes de la hora de salida programada. Si cancela con al menos dos horas de antelación, la cancelación se registra como ordinaria. Si cancela con menos de dos horas, la cancelación se permite y se registra como tardía. La regla anterior de 24 horas y la caducidad de 30 días del historial quedan sustituidas.
 
-### 6.2 Propuesta para revisión
+### 6.2 Reglas aprobadas
 
-La política debe distinguir cancelación por pasajero o conductor, cancelación de uno o ambos tramos, y el registro de cancelaciones tardías. Blaccent no gestionará reembolsos ni pagos; cualquier acuerdo económico derivado de una cancelación se realiza externamente. Los importes aceptados por los pasajeros restantes no se recalculan ni aumentan.
+La funcionalidad debe distinguir cancelación por pasajero o conductor, cancelación de uno o ambos tramos, y registrar las cancelaciones tardías. El pasajero puede ejecutar la cancelación tardía; no se bloquea la acción por encontrarse dentro de las últimas dos horas. Blaccent no gestionará reembolsos ni pagos; cualquier acuerdo económico derivado de una cancelación se realiza externamente. Los importes aceptados por los pasajeros restantes no se recalculan ni aumentan.
 
 Principios recomendados para la política:
 1. Liberar la plaza del tramo cancelado y actualizar su disponibilidad.
@@ -126,12 +126,11 @@ Principios recomendados para la política:
 6. Si cancela el conductor, informar a todos los pasajeros afectados.
 7. Registrar el evento de cancelación en el historial durante seis meses.
 
-### 6.3 Decisiones que debe confirmar el propietario del producto
+### 6.3 Decisiones que siguen pendientes
 
-- Confirmar si una cancelación dentro de las últimas dos horas se bloquea o se permite y marca como tardía.
-- Definir quién registra una ausencia, cuándo puede hacerlo y cómo puede revisarse un registro incorrecto.
-- Definir fórmula, ponderaciones y visibilidad del indicador de fiabilidad.
 - Definir el procedimiento técnico de eliminación o anonimización al cumplir seis meses.
+- Definir la fórmula numérica del indicador de fiabilidad, conservando la regla aprobada de que una ausencia tiene más peso negativo que una cancelación tardía.
+- Definir la visibilidad del indicador y si el usuario puede consultar su propio detalle.
 - Definir cómo se informa de cualquier acuerdo económico externo sin procesar pagos en Blaccent.
 
 ## 7. Ubicación en vivo e historial
@@ -145,9 +144,11 @@ Se mantienen ambas funcionalidades.
 - No se transmite ubicación fuera de un trayecto activo.
 
 **Historial**
-- Se conserva historial de desplazamientos y cancelaciones para aportar contexto de confianza.
+- Se conserva historial de desplazamientos, cancelaciones y ausencias para aportar contexto de confianza.
+- El conductor puede registrar una ausencia cuando un pasajero con plaza confirmada no se presenta y no ha cancelado previamente.
 - El acceso debe limitarse a los casos y usuarios autorizados.
-- Los registros de cancelaciones y ausencias se conservan durante seis meses desde que ocurren. La fórmula y la visibilidad del indicador de fiabilidad quedan pendientes de definición.
+- Los registros de cancelaciones y ausencias se conservan durante seis meses desde que ocurren.
+- El indicador de fiabilidad debe reflejar que una ausencia tiene más peso negativo que una cancelación tardía. La ponderación numérica y la visibilidad quedan pendientes.
 
 ## 8. Administración
 
@@ -233,7 +234,7 @@ Una vez confirmada una plaza, las condiciones económicas aceptadas no podrán e
 ### RF-005. Cancelación por parte del pasajero
 El sistema permitirá al pasajero cancelar su participación en un trayecto hasta dos horas antes de la hora de salida programada.
 
-**Pendiente de aclaración:** la redacción establece el plazo de cancelación permitida, pero RF-008 contempla cancelaciones con menos de dos horas. Antes de implementar, debe confirmarse si una cancelación tardía se permite y queda registrada como tardía, o si el sistema la bloquea y se registra mediante otro procedimiento.
+Las cancelaciones con menos de dos horas de antelación también están permitidas; se registran como tardías conforme a RF-008.
 
 ### RF-006. Advertencia previa de cancelación
 Antes de confirmar una cancelación, el sistema informará al usuario de que la cancelación quedará registrada en su historial de actividad y podrá tenerse en cuenta para calcular su fiabilidad dentro de la plataforma.
@@ -247,7 +248,7 @@ El sistema marcará como cancelación tardía cualquier cancelación realizada c
 ### RF-009. Ausencias
 El sistema permitirá registrar como ausencia ("no presentado") a un pasajero que, habiendo confirmado su participación, no se presente al trayecto y no haya realizado una cancelación previa.
 
-**Pendiente de aclaración:** definir quién puede registrar la ausencia (por ejemplo, conductor o administrador), en qué ventana temporal y si el pasajero puede impugnar o solicitar corrección del registro.
+El conductor puede registrar la ausencia de un pasajero que tenía plaza confirmada, no se presentó y no realizó una cancelación previa. La ventana temporal exacta y el procedimiento de revisión de un registro incorrecto no están especificados.
 
 ## Historial y fiabilidad
 
@@ -257,7 +258,7 @@ El sistema conservará los registros de cancelaciones y ausencias durante seis m
 ### RF-011. Indicador de fiabilidad
 El sistema utilizará la información de cancelaciones y ausencias registradas durante los últimos seis meses para calcular y mostrar un indicador de fiabilidad del usuario.
 
-**Pendiente de aclaración:** definir fórmula, ponderación de cancelación ordinaria frente a tardía y ausencia, umbrales/etiquetas, quién puede consultar el indicador y si el usuario puede consultar su propio detalle. No presentar una puntuación o porcentaje arbitrario como regla aprobada.
+**Regla de ponderación aprobada:** una ausencia debe tener más peso negativo en la fiabilidad que una cancelación tardía. **Pendiente:** definir la fórmula numérica, el tratamiento de las cancelaciones ordinarias, los umbrales/etiquetas, quién puede consultar el indicador y si el usuario puede consultar su propio detalle. No presentar una puntuación o porcentaje arbitrario como regla aprobada.
 
 ## Gestión de pagos
 
@@ -284,9 +285,9 @@ Cualquier intercambio económico entre conductor y pasajeros se realizará fuera
 ## Decisiones pendientes antes de implementación
 
 1. Unidad de cálculo del límite proporcional de gastos reales y conceptos admisibles.
-2. Confirmar si se permite cancelar durante las últimas dos horas o si la cancelación se bloquea.
-3. Quién registra ausencias, cuándo y cómo puede revisarse un registro incorrecto.
-4. Fórmula, ponderaciones, presentación y permisos del indicador de fiabilidad.
+2. Definir el procedimiento de revisión de ausencias registradas incorrectamente.
+3. Definir la fórmula numérica del indicador, sabiendo que una ausencia pesa más que una cancelación tardía.
+4. Definir la presentación y los permisos de consulta del indicador.
 5. Confirmar política de retención técnica y eliminación/anonimización al cumplir seis meses.
 6. Cómo se presenta el importe estimado por tramo y la instantánea económica aceptada por cada pasajero.
 
