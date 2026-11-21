@@ -147,7 +147,6 @@ Se mantienen ambas funcionalidades.
 - El conductor puede registrar una ausencia cuando un pasajero con plaza confirmada no se presenta y no ha cancelado previamente.
 - El acceso debe limitarse a los casos y usuarios autorizados.
 - Los registros de cancelaciones y ausencias se conservan durante seis meses desde que ocurren.
-- El indicador de fiabilidad debe reflejar que una ausencia tiene más peso negativo que una cancelación tardía. La ponderación numérica y la visibilidad quedan pendientes.
 
 ## 8. Administración
 
