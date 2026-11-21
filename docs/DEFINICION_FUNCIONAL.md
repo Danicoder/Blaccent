@@ -129,7 +129,6 @@ Principios recomendados para la política:
 ### 6.3 Decisiones que siguen pendientes
 
 - Definir el procedimiento técnico de eliminación o anonimización al cumplir seis meses.
-- Definir la fórmula numérica del indicador de fiabilidad, conservando la regla aprobada de que una ausencia tiene más peso negativo que una cancelación tardía.
 - Definir la visibilidad del indicador y si el usuario puede consultar su propio detalle.
 - Definir cómo se informa de cualquier acuerdo económico externo sin procesar pagos en Blaccent.
 
@@ -241,7 +240,7 @@ El sistema marcará como cancelación tardía cualquier cancelación realizada c
 ### RF-009. Ausencias
 El sistema permitirá registrar como ausencia ("no presentado") a un pasajero que, habiendo confirmado su participación, no se presente al trayecto y no haya realizado una cancelación previa.
 
-El conductor puede registrar la ausencia de un pasajero que tenía plaza confirmada, no se presentó y no realizó una cancelación previa. La ventana temporal exacta y el procedimiento de revisión de un registro incorrecto no están especificados.
+El conductor puede registrar la ausencia de un pasajero que tenía plaza confirmada, no se presentó y no realizó una cancelación previa. El conductor que hizo el registro puede deshacerlo durante los diez minutos siguientes. El registro original y su corrección deben conservar trazabilidad.
 
 ## Historial y fiabilidad
 
@@ -251,7 +250,25 @@ El sistema conservará los registros de cancelaciones y ausencias durante seis m
 ### RF-011. Indicador de fiabilidad
 El sistema utilizará la información de cancelaciones y ausencias registradas durante los últimos seis meses para calcular y mostrar un indicador de fiabilidad del usuario.
 
-**Regla de ponderación aprobada:** una ausencia debe tener más peso negativo en la fiabilidad que una cancelación tardía. **Pendiente:** definir la fórmula numérica, el tratamiento de las cancelaciones ordinarias, los umbrales/etiquetas, quién puede consultar el indicador y si el usuario puede consultar su propio detalle. No presentar una puntuación o porcentaje arbitrario como regla aprobada.
+**Fórmula aprobada de fiabilidad:**
+
+\[
+\text{Fiabilidad} =
+\frac{C + O + 0,5T}{N}\times 100
+\]
+
+Donde:
+- \(C\): número de viajes completados en el periodo.
+- \(O\): número de cancelaciones ordinarias del pasajero (realizadas con al menos dos horas de antelación).
+- \(T\): número de cancelaciones tardías del pasajero (realizadas con menos de dos horas de antelación).
+- \(N\): total de reservas confirmadas evaluables del usuario en los últimos seis meses. Cada reserva se cuenta una sola vez.
+- Una ausencia confirmada aporta 0 puntos y forma parte de \(N\).
+
+Por tanto, viaje completado y cancelación ordinaria aportan 1 punto; cancelación tardía aporta 0,5 puntos; ausencia aporta 0 puntos. Una ausencia tiene el doble de impacto negativo que una cancelación tardía. Las cancelaciones realizadas por el conductor y los viajes cancelados por el conductor no se imputan como incumplimiento del pasajero.
+
+**Umbral mínimo:** el indicador numérico solo se muestra cuando existen al menos cinco reservas confirmadas evaluables dentro de los últimos seis meses. Con menos de cinco, se muestra «Datos insuficientes» y no se presenta una puntuación numérica.
+
+**Corrección de ausencias:** el conductor que haya registrado una ausencia puede deshacer su propio registro durante los diez minutos siguientes. Al deshacerlo, la ausencia deja de contar como tal y la fiabilidad se recalcula según el estado definitivo de la reserva; no se convierte automáticamente en viaje completado. La corrección debe quedar auditada, conservando quién registró la ausencia, quién la deshizo y las marcas temporales.
 
 ## Gestión de pagos
 
