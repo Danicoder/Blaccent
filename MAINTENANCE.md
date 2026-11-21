@@ -104,3 +104,15 @@ Procedimiento:
 3. Verificar el arranque local y el proceso de despliegue.
 4. Retirar accesos del responsable saliente cuando proceda.
 5. Actualizar esta guía y registrar los cambios.
+
+
+## Requisitos económicos vigentes (RF-001 a RF-015)
+
+- Parking Panoramis: **2,00 € estimados para la ida y 2,00 € estimados para la vuelta; 4,00 € para ambos tramos en la misma jornada**. Es un importe estimado por vehículo, no por pasajero, y es editable desde administración.
+- El reparto individual se realiza entre pasajeros que acepten compartir parking en cada tramo, con una participación por ida y una por vuelta (dos si el pasajero reserva ambos).
+- El importe y las condiciones aceptadas quedan bloqueados tras confirmar la plaza. No se incrementan ni recalculan por cancelaciones, ausencias o cambios de ocupación de otros usuarios.
+- El pasajero puede cancelar hasta dos horas antes de la salida; las cancelaciones con menos de dos horas se identifican como tardías. Consultar `docs/DEFINICION_FUNCIONAL.md` antes de implementar porque falta concretar si se permitirá ejecutar la cancelación tardía o se bloqueará.
+- Cancelaciones y ausencias se conservan durante seis meses y se usan para un indicador de fiabilidad. Fórmula y reglas de visibilidad pendientes.
+- **No integrar pagos:** Blaccent no procesa, custodia ni distribuye dinero. No añadir pasarelas ni proveedores externos de pago. Los acuerdos económicos se realizan fuera de la plataforma.
+
+Estos requisitos son documentación funcional aprobada; no implican que las funciones estén implementadas en la versión actual.
