@@ -64,7 +64,7 @@ Estos valores describen requisitos funcionales; no están implementados necesari
 | Tarifa >20–35 km | 3 € por pasajero y trayecto | Panel de administración |
 | Tarifa >35–50 km | 4 € por pasajero y trayecto | Panel de administración |
 | Tarifa >50 km | 5 € por pasajero y trayecto | Panel de administración |
-| Parking Panoramis | **4 € estimados por jornada y vehículo** | Valor predeterminado editable desde administración |
+| Parking Panoramis | **2 € estimados para ida y 2 € para vuelta; 4 € ambos tramos en la misma jornada** | Valores predeterminados editables desde administración |
 | Parking Interparking | Pendiente de cargar tarifas y modalidades verificadas | Panel de administración |
 | Parking gratuito | 0 € | Opción de publicación |
 | Reparto del parking | 1 participación por ida, 1 por vuelta, 2 por ida y vuelta | Regla funcional |
