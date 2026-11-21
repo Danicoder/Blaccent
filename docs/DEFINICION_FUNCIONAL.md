@@ -208,3 +208,99 @@ No se añadirá una comisión de reserva sin aprobación expresa. Los servicios 
 ## 12. Fuera del alcance de esta actualización documental
 
 Esta actualización no implementa lógica de cálculo, pagos, migraciones SQL, políticas RLS, interfaz ni integraciones de parking. Esas tareas se abordarán después de validar las decisiones pendientes y el diseño funcional correspondiente.
+
+
+---
+
+# Requisitos funcionales aprobados (RF-001 a RF-015)
+
+**Fecha de aprobación:** 21-11-2026. Esta sección prevalece sobre cualquier formulación anterior de este documento que la contradiga. Los puntos identificados como pendientes requieren decisión antes de desarrollar la funcionalidad afectada.
+
+## Gestión de costes y gastos compartibles
+
+### RF-001. Costes de parking predefinidos
+El sistema deberá considerar un coste estimado de parking de:
+- 2,00 € para el trayecto de ida.
+- 2,00 € para el trayecto de vuelta.
+- 4,00 € para los trayectos de ida y vuelta realizados en la misma jornada.
+
+Estos importes representan el coste estimado de parking del vehículo por tramo/jornada, no el importe que paga individualmente cada pasajero. El reparto individual se calcula según las participaciones de los pasajeros que acepten compartir el parking. El valor de referencia de Panoramis es editable desde administración.
+
+### RF-002. Importe mostrado al pasajero
+Antes de confirmar su participación, el sistema mostrará al pasajero el importe estimado que le corresponde asumir en concepto de gastos compartibles, con desglose de desplazamiento y parking cuando corresponda.
+
+### RF-003. Bloqueo del importe aceptado
+Una vez que el pasajero confirme su participación, el importe mostrado y aceptado quedará bloqueado. No podrá modificarse como consecuencia de cancelaciones realizadas por otros pasajeros.
+
+### RF-004. No recálculo por cancelaciones permitidas
+El sistema no recalculará ni incrementará las aportaciones aceptadas por los pasajeros restantes cuando otro pasajero cancele su participación dentro del plazo de cancelación establecido.
+
+### RF-015. Estabilidad de las condiciones aceptadas
+Una vez confirmada una plaza, las condiciones económicas aceptadas no podrán empeorar para ese pasajero como consecuencia de eventos posteriores producidos por otros usuarios, incluyendo cancelaciones, ausencias o modificaciones de ocupación del vehículo. Este requisito amplía RF-003 y RF-004: el importe aceptado debe conservarse como una instantánea asociada a la reserva. No se realizará un cargo ni se exigirá una aportación adicional por un cambio posterior de ocupación.
+
+## Gestión de cancelaciones
+
+### RF-005. Cancelación por parte del pasajero
+El sistema permitirá al pasajero cancelar su participación en un trayecto hasta dos horas antes de la hora de salida programada.
+
+**Pendiente de aclaración:** la redacción establece el plazo de cancelación permitida, pero RF-008 contempla cancelaciones con menos de dos horas. Antes de implementar, debe confirmarse si una cancelación tardía se permite y queda registrada como tardía, o si el sistema la bloquea y se registra mediante otro procedimiento.
+
+### RF-006. Advertencia previa de cancelación
+Antes de confirmar una cancelación, el sistema informará al usuario de que la cancelación quedará registrada en su historial de actividad y podrá tenerse en cuenta para calcular su fiabilidad dentro de la plataforma.
+
+### RF-007. Registro de cancelaciones
+El sistema registrará todas las cancelaciones realizadas por los pasajeros, incluyendo fecha, hora y trayecto afectado.
+
+### RF-008. Cancelaciones tardías
+El sistema marcará como cancelación tardía cualquier cancelación realizada con menos de dos horas de antelación respecto a la hora de salida del trayecto. La marca de tardía es un registro de actividad; estos requisitos no definen multa ni cobro asociado.
+
+### RF-009. Ausencias
+El sistema permitirá registrar como ausencia ("no presentado") a un pasajero que, habiendo confirmado su participación, no se presente al trayecto y no haya realizado una cancelación previa.
+
+**Pendiente de aclaración:** definir quién puede registrar la ausencia (por ejemplo, conductor o administrador), en qué ventana temporal y si el pasajero puede impugnar o solicitar corrección del registro.
+
+## Historial y fiabilidad
+
+### RF-010. Conservación del historial de cancelaciones
+El sistema conservará los registros de cancelaciones y ausencias durante seis meses desde la fecha en que se produzcan. Transcurrido ese periodo dejarán de estar disponibles para el cálculo de fiabilidad y deberán eliminarse o anonimizarse conforme a la política de conservación que se apruebe.
+
+### RF-011. Indicador de fiabilidad
+El sistema utilizará la información de cancelaciones y ausencias registradas durante los últimos seis meses para calcular y mostrar un indicador de fiabilidad del usuario.
+
+**Pendiente de aclaración:** definir fórmula, ponderación de cancelación ordinaria frente a tardía y ausencia, umbrales/etiquetas, quién puede consultar el indicador y si el usuario puede consultar su propio detalle. No presentar una puntuación o porcentaje arbitrario como regla aprobada.
+
+## Gestión de pagos
+
+### RF-012. Ausencia de gestión de pagos
+El sistema no procesará, custodiará ni distribuirá pagos entre usuarios.
+
+### RF-013. Ausencia de proveedores de pago
+El sistema no integrará pasarelas de pago ni proveedores externos de procesamiento de pagos.
+
+### RF-014. Acuerdos económicos externos
+Cualquier intercambio económico entre conductor y pasajeros se realizará fuera de la plataforma mediante los medios que acuerden las partes. Blaccent se limita a mostrar estimaciones y condiciones económicas acordadas; no inicia ni verifica transferencias.
+
+## Reglas económicas que se mantienen de decisiones anteriores
+
+- Solo los pasajeros aportan a los gastos; el conductor no paga ni obtiene beneficio.
+- Tarifas orientativas por pasajero y trayecto: 0–10 km: 1 €; >10–20 km: 2 €; >20–35 km: 3 €; >35–50 km: 4 €; >50 km: 5 €.
+- Cuando las aportaciones provisionales superen el límite de gastos reales compartibles, se aplica reducción proporcional. La unidad de cálculo y los conceptos de gasto admisibles siguen pendientes.
+- El parking de Panoramis se estima en 2 € por ida y 2 € por vuelta, 4 € si se realizan ambos tramos en la misma jornada.
+- El parking se reparte entre los pasajeros que lo acepten expresamente: una participación por ida, una por vuelta y dos por ida y vuelta. El importe por pasajero queda bloqueado al confirmar.
+- El destino es exclusivamente la oficina de Panoramis.
+- Se mantiene la aprobación del conductor para confirmar solicitudes.
+- Se mantienen ubicación en vivo durante el trayecto activo e historial, con controles de privacidad.
+
+## Decisiones pendientes antes de implementación
+
+1. Unidad de cálculo del límite proporcional de gastos reales y conceptos admisibles.
+2. Confirmar si se permite cancelar durante las últimas dos horas o si la cancelación se bloquea.
+3. Quién registra ausencias, cuándo y cómo puede revisarse un registro incorrecto.
+4. Fórmula, ponderaciones, presentación y permisos del indicador de fiabilidad.
+5. Confirmar política de retención técnica y eliminación/anonimización al cumplir seis meses.
+6. Cómo se comunica el reparto estimado sabiendo que los importes individuales quedan bloqueados y no se recalculan cuando cambie la ocupación.
+
+## Exclusiones expresas
+- No implementar pasarelas, pagos, custodia, transferencias, liquidaciones ni reembolsos desde Blaccent.
+- No aplicar multas o penalizaciones económicas por cancelaciones tardías o ausencias sin un requisito aprobado adicional.
+- No aumentar importes aceptados por cancelaciones, ausencias ni cambios de ocupación.
