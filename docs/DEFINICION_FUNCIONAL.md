@@ -1,6 +1,6 @@
 # Definición funcional de Blaccent
 
-**Estado:** borrador funcional actualizado; las decisiones indicadas como aprobadas reflejan las respuestas acordadas el 21-11-2026. Los puntos marcados como pendientes no deben implementarse como reglas definitivas.
+**Estado:** decisiones para el MVP aprobadas el 21-11-2026 y 22-11-2026. Esta definición prevalece sobre borradores anteriores. Las exclusiones y condiciones de validación futura se indican expresamente.
 
 ## 1. Propósito y alcance
 
@@ -20,6 +20,7 @@ El conductor podrá indicar:
 - Aparcamiento previsto.
 
 La ida y la vuelta tienen disponibilidad y reservas independientes. La oficina de Panoramis es el destino único.
+Para la distancia por carretera, el MVP utilizará OSRM público y guardará el resultado asociado al viaje. Antes del despliegue se verificarán los términos y límites vigentes del servicio.
 
 ## 3. Aportación por desplazamiento
 
@@ -35,16 +36,16 @@ La ida y la vuelta tienen disponibilidad y reservas independientes. La oficina d
 
 La ida y la vuelta se calculan por separado. No se cobra por un tramo que el pasajero no haya reservado.
 
-### 3.2 Límite por gastos reales
+### 3.2 Límite por gastos reales — fuera del MVP
 
-La suma provisional de las aportaciones de los pasajeros no puede superar el límite de gastos reales compartibles aplicable. Si lo supera, las aportaciones se reducen proporcionalmente.
+En el MVP no se calcula ni se cobra un importe definitivo de gastos compartibles. Las tarifas por distancia y los importes de parking son estimaciones informativas; no acreditan el gasto real ni constituyen una cotización, deuda o solicitud de pago. No se implementa todavía la reducción proporcional.
 
-**Regla matemática propuesta para el cálculo:** si las aportaciones provisionales son (a_i) y el límite validado es (G), con (A=\sum a_i):
+La siguiente regla matemática queda como referencia para una fase posterior, no aprobada para uso productivo: si las aportaciones provisionales son (a_i) y el límite validado es (G), con (A=\sum a_i):
 - Si (A \leq G), se mantienen las aportaciones provisionales.
 - Si (A > G), cada aportación ajustada se calcula proporcionalmente: (a_i' = a_i \times G/A).
 - El cálculo final se realiza en céntimos. Los céntimos residuales se distribuyen mediante un criterio determinista (por ejemplo, mayores restos), de modo que la suma sea exactamente el límite redondeado y nunca lo supere.
 
-Esta fórmula no resuelve por sí sola qué gastos se consideran compartibles ni cuál es la unidad sobre la que se calcula el límite. Esos elementos deben validarse antes de implementar el cálculo. No se deben inventar gastos ni tratar una estimación como justificante de gasto real.
+Antes de habilitar cálculo productivo, una validación legal deberá aprobar los conceptos y evidencias admisibles y la unidad del límite (trayecto, jornada o vehículo). Hasta entonces se mantienen las estimaciones informativas y no se presenta el simulador como cálculo de gasto real.
 
 ### 3.3 Principios
 
@@ -63,8 +64,7 @@ Esta fórmula no resuelve por sí sola qué gastos se consideran compartibles ni
 - Administración puede modificar los valores de referencia.
 
 **Interparking Puerto Alicante - Poniente**
-- Sus tarifas, modalidades y condiciones de estancia se configuran desde administración.
-- El importe debe calcularse con la información de tarifa y duración que se haya validado.
+- Queda fuera del MVP; no se ofrece ni se configura hasta validar tarifas, modalidades y condiciones.
 
 **Aparcamiento gratuito**
 - Coste: 0 €.
@@ -81,7 +81,7 @@ Coste por participación = coste de parking a repartir / total de participacione
 
 Aportación individual = coste por participación × participaciones del pasajero.
 
-Los importes se expresan en céntimos. Los céntimos residuales se distribuyen de forma determinista, sin que la suma exceda ni quede por debajo del coste que se está repartiendo.
+Los importes estimados se muestran en céntimos. El reparto mostrado es orientativo, no un cargo ni una liquidación. Una vez aceptadas las condiciones de una plaza, su importe estimado no se recalcula ni aumenta por cambios posteriores de ocupación.
 
 ### 4.3 Aceptación y regularización
 
@@ -93,7 +93,7 @@ Antes de confirmar, el pasajero debe ver:
 - Aportación del desplazamiento.
 - Total estimado.
 
-El pasajero debe aceptar expresamente el importe estimado que le corresponde. Una vez confirmada la plaza, ese importe queda bloqueado y no puede aumentar por cambios posteriores de ocupación, cancelaciones o ausencias. RF-012 a RF-014 establecen que Blaccent no procesa ni gestiona pagos ni reembolsos; cualquier acuerdo o ajuste económico entre las partes se realiza fuera de la plataforma. La app no debe solicitar ni registrar un pago adicional como consecuencia de cambios posteriores.
+El pasajero debe aceptar expresamente las estimaciones informativas que se muestran. No son una deuda ni una obligación de pago dentro de Blaccent. Una vez confirmada la plaza, las estimaciones quedan guardadas y no aumentan ni se recalculan por cambios posteriores de ocupación, cancelaciones o ausencias. RF-012 a RF-014 establecen que Blaccent no procesa ni gestiona pagos ni reembolsos; cualquier acuerdo económico externo no se registra ni verifica en la plataforma.
 
 ## 5. Reservas y aprobación
 
@@ -101,9 +101,10 @@ El pasajero debe aceptar expresamente el importe estimado que le corresponde. Un
 2. Elige solo ida, solo vuelta o ambos tramos.
 3. Consulta disponibilidad por tramo y desglose económico.
 4. Acepta el importe estimado del desplazamiento y, si procede, el parking.
-5. Envía una solicitud.
-6. El conductor acepta o rechaza.
-7. La plaza solo queda confirmada tras la aceptación del conductor y la aceptación de las condiciones económicas aplicables.
+5. Si no acepta el parking, puede retirar la solicitud; no se traslada su parte a otros pasajeros.
+6. Envía una solicitud.
+7. El conductor acepta o rechaza.
+8. La plaza solo queda confirmada tras la aceptación del conductor y la aceptación de las condiciones estimadas aplicables.
 
 No se puede confirmar más plazas de las disponibles. La aceptación de ida no reserva automáticamente la vuelta ni viceversa.
 
@@ -117,7 +118,7 @@ El pasajero puede cancelar en cualquier momento antes de la hora de salida progr
 
 La funcionalidad debe distinguir cancelación por pasajero o conductor, cancelación de uno o ambos tramos, y registrar las cancelaciones tardías. El pasajero puede ejecutar la cancelación tardía; no se bloquea la acción por encontrarse dentro de las últimas dos horas. Blaccent no gestionará reembolsos ni pagos; cualquier acuerdo económico derivado de una cancelación se realiza externamente. Los importes aceptados por los pasajeros restantes no se recalculan ni aumentan.
 
-Principios recomendados para la política:
+Reglas aprobadas para la política:
 1. Liberar la plaza del tramo cancelado y actualizar su disponibilidad.
 2. No aumentar automáticamente la aportación de pasajeros restantes.
 3. Mantener intactos los importes de parking ya aceptados por los pasajeros restantes; no recalcularlos cuando cambie la ocupación.
@@ -125,12 +126,11 @@ Principios recomendados para la política:
 5. No procesar reembolsos ni pagos desde Blaccent; los acuerdos económicos se realizan fuera de la plataforma.
 6. Si cancela el conductor, informar a todos los pasajeros afectados.
 7. Registrar el evento de cancelación en el historial durante seis meses.
+8. Si el conductor desea cambiar el parking de un tramo con reservas, cancela el tramo y publica otro con las nuevas condiciones. Las reservas existentes no se modifican; cada pasajero debe solicitar y aceptar las condiciones nuevas. Una cancelación hecha por el conductor no afecta a la fiabilidad del pasajero.
 
-### 6.3 Decisiones que siguen pendientes
+### 6.3 Cierre de tramo y resultado de reservas
 
-- Definir el procedimiento técnico de eliminación o anonimización al cumplir seis meses.
-- Definir la visibilidad del indicador y si el usuario puede consultar su propio detalle.
-- Definir cómo se informa de cualquier acuerdo económico externo sin procesar pagos en Blaccent.
+Al finalizar un tramo, el conductor lo cierra y clasifica cada reserva confirmada no cancelada como viaje completado o ausencia. Las cancelaciones del conductor no se imputan al pasajero. Una reserva sin clasificación explícita no se incluye en el cálculo de fiabilidad. El conductor puede deshacer su propio registro de ausencia durante los diez minutos siguientes, conservando la trazabilidad; si lo deshace, debe clasificar expresamente la reserva como completada para que puntúe.
 
 ## 7. Ubicación en vivo e historial
 
@@ -145,8 +145,9 @@ Se mantienen ambas funcionalidades.
 **Historial**
 - Se conserva historial de desplazamientos, cancelaciones y ausencias para aportar contexto de confianza.
 - El conductor puede registrar una ausencia cuando un pasajero con plaza confirmada no se presenta y no ha cancelado previamente.
-- El acceso debe limitarse a los casos y usuarios autorizados.
-- Los registros de cancelaciones y ausencias se conservan durante seis meses desde que ocurren.
+- El historial detallado solo lo consulta el propio usuario y administración autorizada.
+- El indicador agregado se muestra a otro usuario solo al revisar una solicitud o reserva entre ambos; no se muestran a terceros fechas ni detalles de eventos.
+- Los registros identificables de cancelaciones, ausencias y sus correcciones se conservan durante seis meses desde que ocurren y después se eliminan; no se conserva historial por usuario pasado ese plazo.
 
 ## 8. Administración
 
@@ -155,9 +156,9 @@ El panel de administración deberá permitir:
 - Consultar viajes y reservas.
 - Configurar tarifas base por distancia.
 - Configurar los importes estimados de Panoramis (2 € por ida y 2 € por vuelta; 4 € ambos tramos en la misma jornada).
-- Mantener tarifas y modalidades de Interparking.
+- Interparking queda fuera del MVP; no administrar ni mostrar sus tarifas hasta que se incorpore en una fase posterior aprobada.
 - Permitir cancelar hasta la hora de salida y clasificar la cancelación según la antelación: ordinaria (dos horas o más) o tardía (menos de dos horas).
-- Consultar los importes estimados y los acuerdos económicos informados; no gestionar pagos ni reembolsos.
+- Consultar las estimaciones; no registrar acuerdos, pagos, reembolsos ni liquidaciones.
 - Consultar estadísticas de uso.
 - Mantener trazabilidad de cambios y vigencia de cada configuración.
 
@@ -176,27 +177,28 @@ Blaccent no procesa, custodia ni distribuye pagos. No integra pasarelas ni prove
 - Las aceptaciones económicas deben quedar asociadas a la reserva y a la configuración aplicable.
 - Los cambios administrativos deben ser auditables.
 
-## 11. Cuestiones funcionales pendientes
+## 11. Decisiones cerradas y límites del MVP
 
-1. Definir conceptos admisibles y evidencia de los gastos reales compartibles.
-2. Definir unidad de cálculo del límite proporcional: por trayecto, jornada o vehículo.
-3. Definir cómo se resuelve el exceso del coste real del parking cuando un pasajero no acepta pagarlo.
-4. Definir la ventana temporal y el procedimiento para revisar o corregir una ausencia registrada por el conductor.
-5. Definir la fórmula numérica, los umbrales y la visibilidad del indicador de fiabilidad, manteniendo un impacto mayor para las ausencias que para las cancelaciones tardías.
-6. Definir el procedimiento técnico de eliminación o anonimización de cancelaciones y ausencias al cumplir seis meses.
-7. Definir fuente y método de cálculo de distancia por carretera.
-8. Confirmar reglas de recurrencia y reservas de días concretos.
+- **Gastos compartibles:** el MVP muestra únicamente estimaciones, sin declarar ni calcular gastos reales, importes productivos o pagos debidos. El cálculo proporcional queda fuera del MVP hasta que una validación legal apruebe los conceptos, evidencias y unidad de cálculo. No se requiere esa decisión para avanzar con los flujos no económicos.
+- **Rechazo del parking:** el pasajero puede retirar la solicitud; nunca se redistribuye su importe a otros. Para cambiar el parking de un tramo con reservas, el conductor cancela y vuelve a publicar el tramo con nuevas condiciones.
+- **Visibilidad:** el detalle del historial es accesible solo al titular y a administración autorizada. Otros usuarios ven únicamente el indicador agregado durante una solicitud o reserva entre ellos.
+- **Viaje completado:** el conductor cierra el tramo y clasifica cada reserva confirmada no cancelada como completada o ausencia. Sin clasificación explícita, no se computa para fiabilidad. Las cancelaciones del conductor no afectan al pasajero.
+- **Retención:** los eventos identificables de cancelación, ausencia y corrección se eliminan a los seis meses y se excluyen del indicador; no se conserva historial por usuario pasado ese plazo.
+- **Distancia:** OSRM público es la fuente elegida para distancia por carretera en el MVP. Se guarda la distancia con el trayecto y se verifican términos y límites vigentes antes de desplegar esa integración.
+- **Parking:** el MVP ofrece Panoramis (2 € estimados por tramo) y aparcamiento gratuito. Interparking queda fuera hasta validar sus tarifas y condiciones.
+- **Recurrencia:** los viajes recurrentes quedan fuera del MVP; las publicaciones son viajes individuales.
+- **Fiabilidad:** se mantienen la fórmula, el umbral mínimo de cinco reservas evaluables y la ventana de diez minutos para deshacer una ausencia, aprobados en RF-009/RF-011 y en la constitución.
 
-## 12. Fuera del alcance de esta actualización documental
+## 12. Fuera del alcance del MVP
 
-Esta actualización no implementa lógica de cálculo, pagos, migraciones SQL, políticas RLS, interfaz ni integraciones de parking. Esas tareas se abordarán después de validar las decisiones pendientes y el diseño funcional correspondiente.
+No se implementan cálculo productivo de gastos compartibles, pagos, reembolsos, Interparking ni viajes recurrentes. Las estimaciones informativas no generan deudas ni obligan a realizar pagos. Las funcionalidades incluidas en el MVP siguen requiriendo su implementación, migraciones y pruebas RLS; esta definición no implica que ya estén construidas.
 
 
 ---
 
 # Requisitos funcionales aprobados (RF-001 a RF-015)
 
-**Fecha de aprobación:** 21-11-2026. Esta sección prevalece sobre cualquier formulación anterior de este documento que la contradiga. Los puntos identificados como pendientes requieren decisión antes de desarrollar la funcionalidad afectada.
+**Fecha de aprobación:** 21-11-2026 y 22-11-2026. Esta sección y las decisiones de la sección 11 prevalecen sobre cualquier formulación anterior que las contradiga.
 
 ## Gestión de costes y gastos compartibles
 
@@ -206,10 +208,10 @@ El sistema deberá considerar un coste estimado de parking de:
 - 2,00 € para el trayecto de vuelta.
 - 4,00 € para los trayectos de ida y vuelta realizados en la misma jornada.
 
-Estos importes representan el coste estimado de parking del vehículo por tramo/jornada, no el importe que paga individualmente cada pasajero. El reparto individual se calcula según las participaciones de los pasajeros que acepten compartir el parking. El valor de referencia de Panoramis es editable desde administración.
+Estos importes representan el coste estimado de parking del vehículo por tramo/jornada, no un coste verificado ni el importe de una deuda individual. El desglose informativo por pasajero puede usar las participaciones de quienes acepten compartir el parking. El valor de referencia de Panoramis es editable desde administración y no altera estimaciones ya aceptadas.
 
-### RF-002. Importe mostrado al pasajero
-Antes de confirmar su participación, el sistema mostrará al pasajero el importe estimado que le corresponde asumir en concepto de gastos compartibles, con desglose de desplazamiento y parking cuando corresponda.
+### RF-002. Estimación mostrada al pasajero
+Antes de enviar su solicitud, el sistema mostrará al pasajero las estimaciones informativas de desplazamiento y parking cuando correspondan, indicando que no son gastos reales verificados, una deuda ni una solicitud de pago.
 
 ### RF-003. Bloqueo del importe aceptado
 Una vez que el pasajero confirme su participación, el importe mostrado y aceptado quedará bloqueado. No podrá modificarse como consecuencia de cancelaciones realizadas por otros pasajeros.
@@ -244,7 +246,7 @@ El conductor puede registrar la ausencia de un pasajero que tenía plaza confirm
 ## Historial y fiabilidad
 
 ### RF-010. Conservación del historial de cancelaciones
-El sistema conservará los registros de cancelaciones y ausencias durante seis meses desde la fecha en que se produzcan. Transcurrido ese periodo dejarán de estar disponibles para el cálculo de fiabilidad y deberán eliminarse o anonimizarse conforme a la política de conservación que se apruebe.
+El sistema conservará los registros identificables de cancelaciones, ausencias y sus correcciones durante seis meses desde la fecha en que se produzcan. Al finalizar ese periodo, los registros se eliminarán y dejarán de estar disponibles para el cálculo de fiabilidad; no se conserva historial por usuario pasado ese plazo.
 
 ### RF-011. Indicador de fiabilidad
 El sistema utilizará la información de cancelaciones y ausencias registradas durante los últimos seis meses para calcular y mostrar un indicador de fiabilidad del usuario.
@@ -269,6 +271,8 @@ Por tanto, viaje completado y cancelación ordinaria aportan 1 punto; cancelaci�
 
 **Corrección de ausencias:** el conductor que haya registrado una ausencia puede deshacer su propio registro durante los diez minutos siguientes. Al deshacerlo, la ausencia deja de contar como tal y la fiabilidad se recalcula según el estado definitivo de la reserva; no se convierte automáticamente en viaje completado. La corrección debe quedar auditada, conservando quién registró la ausencia, quién la deshizo y las marcas temporales.
 
+**Cierre y acceso:** el conductor cierra cada tramo e indica por cada reserva confirmada no cancelada si se completó el viaje o hubo ausencia. Una reserva sin clasificación explícita no se evalúa. El historial detallado solo está disponible para su titular y administración autorizada. A terceros solo se muestra el indicador agregado, y únicamente al revisar una solicitud o reserva entre ambos; nunca se muestra el detalle de eventos.
+
 ## Gestión de pagos
 
 ### RF-012. Ausencia de gestión de pagos
@@ -280,25 +284,21 @@ El sistema no integrará pasarelas de pago ni proveedores externos de procesamie
 ### RF-014. Acuerdos económicos externos
 Cualquier intercambio económico entre conductor y pasajeros se realizará fuera de la plataforma mediante los medios que acuerden las partes. Blaccent se limita a mostrar estimaciones y condiciones económicas acordadas; no inicia ni verifica transferencias.
 
-## Reglas económicas que se mantienen de decisiones anteriores
+## Reglas económicas informativas que se mantienen de decisiones anteriores
 
-- Solo los pasajeros aportan a los gastos; el conductor no paga ni obtiene beneficio.
+- El conductor no paga aportaciones ni obtiene beneficio. En el MVP, Blaccent no calcula ni registra pagos ni deudas.
 - Tarifas orientativas por pasajero y trayecto: 0–10 km: 1 €; >10–20 km: 2 €; >20–35 km: 3 €; >35–50 km: 4 €; >50 km: 5 €.
-- Cuando las aportaciones provisionales superen el límite de gastos reales compartibles, se aplica reducción proporcional. La unidad de cálculo y los conceptos de gasto admisibles siguen pendientes.
+- El límite proporcional de gastos reales no se implementa en el MVP. Los conceptos, evidencias y unidad se validarán legalmente antes de habilitar una fase de cálculo productivo.
 - El parking de Panoramis se estima en 2 € por ida y 2 € por vuelta, 4 € si se realizan ambos tramos en la misma jornada.
-- El parking se reparte entre los pasajeros que lo acepten expresamente: una participación por ida, una por vuelta y dos por ida y vuelta. El importe por pasajero queda bloqueado al confirmar.
+- La estimación de parking se presenta de forma informativa; se congela para cada reserva aceptada y no aumenta ni se redistribuye por cambios posteriores. El reparto por participaciones se conserva como desglose estimado.
+- El parking gratuito está incluido; Interparking queda fuera del MVP.
 - El destino es exclusivamente la oficina de Panoramis.
 - Se mantiene la aprobación del conductor para confirmar solicitudes.
 - Se mantienen ubicación en vivo durante el trayecto activo e historial, con controles de privacidad.
 
-## Decisiones pendientes antes de implementación
+## Alcance y condiciones futuras
 
-1. Unidad de cálculo del límite proporcional de gastos reales y conceptos admisibles.
-2. Definir el procedimiento de revisión de ausencias registradas incorrectamente.
-3. Definir la fórmula numérica del indicador, sabiendo que una ausencia pesa más que una cancelación tardía.
-4. Definir la presentación y los permisos de consulta del indicador.
-5. Confirmar política de retención técnica y eliminación/anonimización al cumplir seis meses.
-6. Cómo se presenta el importe estimado por tramo y la instantánea económica aceptada por cada pasajero.
+Las decisiones funcionales para el MVP están cerradas en la sección 11. El cálculo productivo de gastos compartibles, Interparking y recurrencia quedan fuera del MVP, no como requisitos bloqueantes. Antes del despliegue de OSRM se verifican sus términos y límites; esta es una condición operativa de integración, no una decisión de producto pendiente.
 
 ## Exclusiones expresas
 - No implementar pasarelas, pagos, custodia, transferencias, liquidaciones ni reembolsos desde Blaccent.

@@ -1,6 +1,6 @@
 # Mantenimiento de Blaccent
 
-Guía para que cualquier responsable de IT pueda operar, mantener y traspasar Blaccent. Los principios y restricciones están en [`constitution.md`](./constitution.md); el contexto y backlog en [`CLAUDE.md`](./CLAUDE.md); las reglas funcionales y decisiones pendientes en [`docs/DEFINICION_FUNCIONAL.md`](./docs/DEFINICION_FUNCIONAL.md).
+Guía para que cualquier responsable de IT pueda operar, mantener y traspasar Blaccent. Los principios y restricciones están en [`constitution.md`](./constitution.md); el contexto y backlog en [`CLAUDE.md`](./CLAUDE.md); las reglas funcionales y límites del MVP en [`docs/DEFINICION_FUNCIONAL.md`](./docs/DEFINICION_FUNCIONAL.md).
 
 ## Estructura del proyecto
 
@@ -14,12 +14,12 @@ Guía para que cualquier responsable de IT pueda operar, mantener y traspasar Bl
 | `src/views/`, `src/components/`, `src/router/`, `src/store/` | Estructura prevista para las siguientes historias del backlog. |
 | `supabase/` | Migraciones SQL y políticas RLS de la base de datos. |
 | `public/` | Recursos estáticos de la PWA. |
-| `docs/DEFINICION_FUNCIONAL.md` | Reglas funcionales aprobadas y decisiones pendientes. |
+| `docs/DEFINICION_FUNCIONAL.md` | Reglas funcionales aprobadas y alcance del MVP. |
 | `.env.example` | Plantilla de variables de entorno, sin valores reales. |
 
 ## Estado funcional
 
-La aplicación está en fase inicial. La pantalla actual comprueba la conexión con Supabase; no debe considerarse que los flujos de viajes, reservas, aportaciones, parking, pagos, ubicación e historial estén implementados por el hecho de aparecer en la documentación.
+La aplicación está en fase inicial. La pantalla actual comprueba la conexión con Supabase; no debe considerarse que los flujos de viajes, reservas, estimaciones, parking, ubicación e historial estén implementados por el hecho de aparecer en la documentación. Blaccent no registra ni procesa pagos.
 
 La migración RLS existente debe revisarse antes de almacenar información funcional. No se debe desplegar información sensible sin políticas probadas.
 
@@ -65,10 +65,10 @@ Estos valores describen requisitos funcionales; no están implementados necesari
 | Tarifa >35–50 km | 4 € por pasajero y trayecto | Panel de administración |
 | Tarifa >50 km | 5 € por pasajero y trayecto | Panel de administración |
 | Parking Panoramis | **2 € estimados para ida y 2 € para vuelta; 4 € ambos tramos en la misma jornada** | Valores predeterminados editables desde administración |
-| Parking Interparking | Pendiente de cargar tarifas y modalidades verificadas | Panel de administración |
+| Parking Interparking | Fuera del MVP; no se ofrece ni se configura | Futuro alcance aprobado expresamente |
 | Parking gratuito | 0 € | Opción de publicación |
 | Reparto del parking | 1 participación por ida, 1 por vuelta, 2 por ida y vuelta | Regla funcional |
-| Límite de gastos reales | Reducción proporcional si aportaciones provisionales lo superan | Pendiente definir gastos y unidad de cálculo |
+| Límite de gastos reales | No se calcula en el MVP; las tarifas son estimaciones informativas | Validación legal obligatoria antes de una fase futura |
 | Cancelaciones | Permitidas hasta la salida; menos de 2 horas se registran como tardías | Regla funcional |
 
 Los importes anteriores son configuración funcional deseada, no parámetros que deban añadirse a `.env`. Los cambios de tarifas deben conservar trazabilidad y no modificar silenciosamente importes ya aceptados.
@@ -96,7 +96,7 @@ Los importes anteriores son configuración funcional deseada, no parámetros que
 - [ ] Entregar variables de entorno mediante el mecanismo seguro aprobado.
 - [ ] Verificar que el responsable puede ejecutar la aplicación localmente.
 - [ ] Revisar las políticas RLS y los permisos de ubicación antes de habilitar datos reales.
-- [ ] Entregar la documentación funcional y el registro de decisiones pendientes.
+- [ ] Entregar la documentación funcional, el alcance MVP y las condiciones de validación futura.
 
 Procedimiento:
 1. Invitar al nuevo responsable como administrador en Supabase, GitHub y hosting.
@@ -106,15 +106,18 @@ Procedimiento:
 5. Actualizar esta guía y registrar los cambios.
 
 
-## Requisitos económicos vigentes (RF-001 a RF-015)
+## Reglas funcionales vigentes (RF-001 a RF-015)
 
 - Parking Panoramis: **2,00 € estimados para la ida y 2,00 € estimados para la vuelta; 4,00 € para ambos tramos en la misma jornada**. Es un importe estimado por vehículo, no por pasajero, y es editable desde administración.
-- El reparto individual se realiza entre pasajeros que acepten compartir parking en cada tramo, con una participación por ida y una por vuelta (dos si el pasajero reserva ambos).
+- El desglose de parking por pasajero es informativo, con una participación por ida y una por vuelta (dos si se ofrecen ambos tramos); no constituye deuda ni pago dentro de la app.
 - El importe y las condiciones aceptadas quedan bloqueados tras confirmar la plaza. No se incrementan ni recalculan por cancelaciones, ausencias o cambios de ocupación de otros usuarios.
 - El pasajero puede cancelar hasta la salida. Con al menos dos horas de antelación la cancelación es ordinaria; con menos de dos horas se permite y queda marcada como tardía.
 - El conductor puede registrar como no presentado a un pasajero con plaza confirmada que no se presente y no haya cancelado.
-- Cancelaciones y ausencias se conservan durante seis meses. Fiabilidad = (viajes completados + cancelaciones ordinarias + 0,5 × cancelaciones tardías) / reservas confirmadas evaluables × 100. Ausencia = 0 puntos. Mostrar solo con al menos cinco reservas evaluables; por debajo, «Datos insuficientes».
+- Al cerrar un tramo, el conductor clasifica cada reserva confirmada no cancelada como viaje completado o ausencia; sin clasificación explícita no cuenta para fiabilidad.
+- Cancelaciones y ausencias se conservan seis meses y después se eliminan; no se guarda historial identificable por usuario pasado ese plazo. Fiabilidad = (viajes completados + cancelaciones ordinarias + 0,5 × cancelaciones tardías) / reservas confirmadas evaluables × 100. Ausencia = 0 puntos. Mostrar solo con al menos cinco reservas evaluables; por debajo, «Datos insuficientes».
 - El conductor que registró una ausencia puede deshacerla durante los diez minutos siguientes; la corrección conserva trazabilidad y deja de computar como ausencia.
+- Historial detallado: solo el titular y administración autorizada. Otros usuarios solo ven el indicador agregado al revisar una solicitud o reserva con esa persona. Los eventos identificables y sus correcciones se eliminan al cumplir seis meses.
+- La distancia por carretera usa OSRM público; verificar sus términos y límites antes del despliegue. Interparking y recurrencia quedan fuera del MVP.
 - **No integrar pagos:** Blaccent no procesa, custodia ni distribuye dinero. No añadir pasarelas ni proveedores externos de pago. Los acuerdos económicos se realizan fuera de la plataforma.
 
 Estos requisitos son documentación funcional aprobada; no implican que las funciones estén implementadas en la versión actual.
