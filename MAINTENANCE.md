@@ -69,7 +69,7 @@ Estos valores describen requisitos funcionales; no están implementados necesari
 | Parking gratuito | 0 € | Opción de publicación |
 | Reparto del parking | 1 participación por ida, 1 por vuelta, 2 por ida y vuelta | Regla funcional |
 | Límite de gastos reales | Reducción proporcional si aportaciones provisionales lo superan | Pendiente definir gastos y unidad de cálculo |
-| Cancelaciones | Hasta 2 horas antes; menos de 2 horas se marca tardía (comportamiento por concretar) | Regla funcional |
+| Cancelaciones | Permitidas hasta la salida; menos de 2 horas se registran como tardías | Regla funcional |
 
 Los importes anteriores son configuración funcional deseada, no parámetros que deban añadirse a `.env`. Los cambios de tarifas deben conservar trazabilidad y no modificar silenciosamente importes ya aceptados.
 
@@ -111,8 +111,9 @@ Procedimiento:
 - Parking Panoramis: **2,00 € estimados para la ida y 2,00 € estimados para la vuelta; 4,00 € para ambos tramos en la misma jornada**. Es un importe estimado por vehículo, no por pasajero, y es editable desde administración.
 - El reparto individual se realiza entre pasajeros que acepten compartir parking en cada tramo, con una participación por ida y una por vuelta (dos si el pasajero reserva ambos).
 - El importe y las condiciones aceptadas quedan bloqueados tras confirmar la plaza. No se incrementan ni recalculan por cancelaciones, ausencias o cambios de ocupación de otros usuarios.
-- El pasajero puede cancelar hasta dos horas antes de la salida; las cancelaciones con menos de dos horas se identifican como tardías. Consultar `docs/DEFINICION_FUNCIONAL.md` antes de implementar porque falta concretar si se permitirá ejecutar la cancelación tardía o se bloqueará.
-- Cancelaciones y ausencias se conservan durante seis meses y se usan para un indicador de fiabilidad. Fórmula y reglas de visibilidad pendientes.
+- El pasajero puede cancelar hasta la salida. Con al menos dos horas de antelación la cancelación es ordinaria; con menos de dos horas se permite y queda marcada como tardía.
+- El conductor puede registrar como no presentado a un pasajero con plaza confirmada que no se presente y no haya cancelado.
+- Cancelaciones y ausencias se conservan durante seis meses. Una ausencia afecta más negativamente a la fiabilidad que una cancelación tardía; la fórmula numérica y la visibilidad del indicador siguen pendientes.
 - **No integrar pagos:** Blaccent no procesa, custodia ni distribuye dinero. No añadir pasarelas ni proveedores externos de pago. Los acuerdos económicos se realizan fuera de la plataforma.
 
 Estos requisitos son documentación funcional aprobada; no implican que las funciones estén implementadas en la versión actual.
