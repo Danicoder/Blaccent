@@ -30,9 +30,9 @@ La migración RLS existente debe revisarse antes de almacenar información funci
 | GitHub | Repositorio del proyecto | Según administración corporativa |
 | Supabase Cloud | PostgreSQL, autenticación Magic Link y Realtime | Revisar límites del plan gratuito |
 | Vercel o Netlify | Hosting estático y despliegue continuo | Revisar límites del plan gratuito |
-| Proveedor de pagos | No seleccionado ni activado | Requiere validación legal, económica y aprobación |
+| Pagos | No forman parte del alcance | Acuerdos económicos externos a la plataforma |
 
-Antes de añadir un servicio o dependencia, comprueba que cumple coste, privacidad y administración corporativa (ver constitución). No incorporar un proveedor de pagos hasta aprobar comisiones, flujo de fondos y liquidaciones.
+Antes de añadir un servicio o dependencia, comprueba que cumple coste, privacidad y administración corporativa (ver constitución). No incorporar proveedores ni integraciones de pago: Blaccent no procesa, custodia ni distribuye fondos.
 
 ## Puesta en marcha en local
 
