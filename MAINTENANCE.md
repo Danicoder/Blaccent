@@ -69,7 +69,7 @@ Estos valores describen requisitos funcionales; no están implementados necesari
 | Parking gratuito | 0 € | Opción de publicación |
 | Reparto del parking | 1 participación por ida, 1 por vuelta, 2 por ida y vuelta | Regla funcional |
 | Límite de gastos reales | Reducción proporcional si aportaciones provisionales lo superan | Pendiente definir gastos y unidad de cálculo |
-| Cancelaciones | Política pendiente de aprobación; no asumir 24 h | Panel de administración una vez aprobada |
+| Cancelaciones | Hasta 2 horas antes; menos de 2 horas se marca tardía (comportamiento por concretar) | Regla funcional |
 
 Los importes anteriores son configuración funcional deseada, no parámetros que deban añadirse a `.env`. Los cambios de tarifas deben conservar trazabilidad y no modificar silenciosamente importes ya aceptados.
 
