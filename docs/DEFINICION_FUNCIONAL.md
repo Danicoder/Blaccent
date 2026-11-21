@@ -58,9 +58,9 @@ Esta fórmula no resuelve por sí sola qué gastos se consideran compartibles ni
 ### 4.1 Opciones
 
 **Panoramis**
-- Coste predeterminado: **4 € por jornada y vehículo**.
-- Es un importe estimado, no una tarifa real garantizada.
-- Administración puede modificar el valor predeterminado.
+- Coste estimado: **2 € para la ida y 2 € para la vuelta; 4 € para ida y vuelta en la misma jornada**.
+- Es un importe estimado del vehículo, no un importe individual por pasajero ni una tarifa real garantizada.
+- Administración puede modificar los valores de referencia.
 
 **Interparking Puerto Alicante - Poniente**
 - Sus tarifas, modalidades y condiciones de estancia se configuran desde administración.
@@ -93,9 +93,7 @@ Antes de confirmar, el pasajero debe ver:
 - Aportación del desplazamiento.
 - Total estimado.
 
-El pasajero debe aceptar expresamente el parking. Si el coste real es inferior al estimado, se devuelve la diferencia correspondiente. Si es superior, se informa y solicita aceptación expresa para cualquier importe adicional. No se puede cobrar unilateralmente una diferencia ni aumentar un importe confirmado sin aceptación.
-
-**Pendiente:** definir qué ocurre si el coste real supera la estimación y el pasajero no acepta el importe adicional (por ejemplo, asumir la diferencia sin repercutirla, renegociar antes del uso o aplicar una alternativa de parking). También debe determinarse cómo se acredita el coste real.
+El pasajero debe aceptar expresamente el importe estimado que le corresponde. Una vez confirmada la plaza, ese importe queda bloqueado y no puede aumentar por cambios posteriores de ocupación, cancelaciones o ausencias. RF-012 a RF-014 establecen que Blaccent no procesa ni gestiona pagos ni reembolsos; cualquier acuerdo o ajuste económico entre las partes se realiza fuera de la plataforma. La app no debe solicitar ni registrar un pago adicional como consecuencia de cambios posteriores.
 
 ## 5. Reservas y aprobación
 
@@ -117,24 +115,16 @@ Está aprobada la necesidad de una política de cancelación explícita, pero **
 
 ### 6.2 Propuesta para revisión
 
-La política debería distinguir:
-- Cancelación por el pasajero.
-- Cancelación por el conductor.
-- Cancelación de un tramo frente a cancelación de ida y vuelta.
-- Cancelación antes y después de un plazo de corte que todavía debe decidirse.
-- Costes de parking recuperables y no recuperables.
-- Reembolso de la aportación del desplazamiento.
-- Efecto sobre las participaciones y aportaciones de los pasajeros restantes.
-- Comunicación y aceptación de cualquier modificación económica.
+La política debe distinguir cancelación por pasajero o conductor, cancelación de uno o ambos tramos, y el registro de cancelaciones tardías. Blaccent no gestionará reembolsos ni pagos; cualquier acuerdo económico derivado de una cancelación se realiza externamente. Los importes aceptados por los pasajeros restantes no se recalculan ni aumentan.
 
 Principios recomendados para la política:
 1. Liberar la plaza del tramo cancelado y actualizar su disponibilidad.
 2. No aumentar automáticamente la aportación de pasajeros restantes.
 3. Recalcular el reparto del parking solo según las condiciones que los pasajeros hayan aceptado y la política publicada.
-4. Reembolsar los importes que ya no correspondan, cuando sean recuperables.
-5. Si se propone un importe nuevo a los pasajeros restantes, solicitar aceptación expresa.
-6. Si cancela el conductor, informar a todos los pasajeros afectados y aplicar el reembolso que corresponda.
-7. Registrar el evento de cancelación para el historial, sujeto a una política de retención aún pendiente.
+4. No recalcular ni aumentar las aportaciones aceptadas por los pasajeros restantes.
+5. No procesar reembolsos ni pagos desde Blaccent; los acuerdos económicos se realizan fuera de la plataforma.
+6. Si cancela el conductor, informar a todos los pasajeros afectados.
+7. Registrar el evento de cancelación en el historial durante seis meses.
 
 ### 6.3 Decisiones que debe confirmar el propietario del producto
 
@@ -165,10 +155,10 @@ El panel de administración deberá permitir:
 - Gestionar usuarios, conductores y pasajeros.
 - Consultar viajes y reservas.
 - Configurar tarifas base por distancia.
-- Configurar el importe predeterminado de Panoramis (4 € por jornada y vehículo).
+- Configurar los importes estimados de Panoramis (2 € por ida y 2 € por vuelta; 4 € ambos tramos en la misma jornada).
 - Mantener tarifas y modalidades de Interparking.
 - Gestionar la política de cancelación una vez aprobada.
-- Consultar aportaciones, regularizaciones y reembolsos cuando el modelo de pagos esté definido.
+- Consultar los importes estimados y los acuerdos económicos informados; no gestionar pagos ni reembolsos.
 - Consultar estadísticas de uso.
 - Mantener trazabilidad de cambios y vigencia de cada configuración.
 
@@ -298,7 +288,7 @@ Cualquier intercambio económico entre conductor y pasajeros se realizará fuera
 3. Quién registra ausencias, cuándo y cómo puede revisarse un registro incorrecto.
 4. Fórmula, ponderaciones, presentación y permisos del indicador de fiabilidad.
 5. Confirmar política de retención técnica y eliminación/anonimización al cumplir seis meses.
-6. Cómo se comunica el reparto estimado sabiendo que los importes individuales quedan bloqueados y no se recalculan cuando cambie la ocupación.
+6. Cómo se presenta el importe estimado por tramo y la instantánea económica aceptada por cada pasajero.
 
 ## Exclusiones expresas
 - No implementar pasarelas, pagos, custodia, transferencias, liquidaciones ni reembolsos desde Blaccent.
