@@ -1,39 +1,57 @@
 # Blaccent — Instrucciones del agente
 
 ## Contexto
-Blaccent es una PWA interna y responsive para que los empleados de Accenture compartan coche hasta la sede de Panoramis (Alicante), con reservas aprobadas por el conductor, reparto automático de gastos, ubicación en vivo del conductor e historial de cumplimiento de los usuarios.
+Blaccent es una PWA interna y responsive para que empleados de Accenture compartan desplazamientos habituales en coche hasta su oficina en Panoramis (Alicante). No es un servicio profesional de transporte ni debe generar beneficios económicos para los conductores. Los pasajeros realizan aportaciones para compartir gastos; el conductor no paga aportaciones ni recibe remuneración.
 
-La fuente de verdad de principios y restricciones es [`constitution.md`](./constitution.md); prevalece sobre este archivo en caso de conflicto.
+La fuente de verdad de principios y restricciones es [`constitution.md`](./constitution.md). La definición funcional detallada, incluidas las decisiones aprobadas y las cuestiones pendientes, está en [`docs/DEFINICION_FUNCIONAL.md`](./docs/DEFINICION_FUNCIONAL.md). La constitución prevalece en caso de conflicto.
 
-Decisiones caras de cambiar: login con Magic Link restringido a `@accenture.com`, ciclo de estados de reserva (solicitada / aceptada / denegada / cancelada / cancelada fuera de plazo), regla de cancelación de 24 h, caducidad de cancelaciones fuera de plazo a los 30 días, fuente gratuita de distancia por carretera, privacidad de ubicación e historial, proveedor de hosting (Vercel o Netlify).
+## Decisiones funcionales aprobadas
+- Destino único: oficina de Panoramis, Alicante. No se permiten destinos alternativos al publicar un viaje.
+- Tarifas orientativas por pasajero y trayecto: 0–10 km: 1 €; >10–20 km: 2 €; >20–35 km: 3 €; >35–50 km: 4 €; >50 km: 5 €. Ida y vuelta se calculan por separado.
+- Si la suma provisional de aportaciones supera el límite de gastos reales compartibles, las aportaciones se reducen proporcionalmente. La unidad de aplicación del límite y los conceptos de gasto admisibles deben validarse antes de implementar el cálculo definitivo.
+- Solo los pasajeros pagan aportaciones. No hay beneficio para el conductor.
+- Desplazamiento y parking son conceptos separados.
+- Parking Panoramis: 4 € estimados por jornada y vehículo, valor predeterminado editable desde administración.
+- Interparking Puerto Alicante - Poniente: tarifas y modalidades configurables desde administración. Parking gratuito: 0 €.
+- El parking se reparte solo entre pasajeros que lo aceptan: 1 participación por ida, 1 por vuelta y 2 por ida y vuelta.
+- El coste real del parking se regulariza: se devuelve cualquier diferencia a favor del pasajero; un importe adicional exige informar y obtener aceptación expresa. No se incrementan importes confirmados unilateralmente.
+- El conductor debe aprobar o rechazar las solicitudes.
+- Se mantienen ubicación en vivo durante el trayecto activo e historial de viajes/cancelaciones.
+
+## Decisiones pendientes (no inventar ni dar por aprobadas)
+- Política de cancelación: el plazo antiguo de 24 horas no está aprobado. Preparar una propuesta para revisión; no implementar penalizaciones ni plazos definitivos hasta su aprobación.
+- Límite proporcional: definir unidad de cálculo (trayecto, ida/vuelta o jornada/vehículo), conceptos de gastos compartibles, evidencia y tratamiento de gastos no cubiertos.
+- Parking: concretar cómo se acredita el coste real y cómo se tratan diferencias no recuperables, así como la distribución exacta de céntimos entre participantes.
+- Pagos: proveedor, destinatario de fondos, liquidaciones, comisiones, reembolsos y responsabilidades pendientes de validación legal y económica. No activar pagos reales todavía.
+- Retención y visibilidad temporal del historial de cancelaciones.
+- Reglas de viajes recurrentes y disponibilidad por fecha.
 
 ## Stack
 - **Frontend:** Vue.js + CSS modular, mobile-first, PWA instalable.
-- **Backend:** Supabase Cloud (capa gratuita) — PostgreSQL, Auth (Magic Link), Realtime.
-- **Seguridad:** políticas RLS de mínimo privilegio en todas las tablas con datos de usuarios, trayectos, reservas, ubicación o historial; nunca exponer claves privilegiadas en el frontend.
+- **Backend:** Supabase Cloud — PostgreSQL, Auth (Magic Link), Realtime.
+- **Seguridad:** políticas RLS de mínimo privilegio en todas las tablas con datos de usuarios, trayectos, reservas, ubicación, historial o pagos; nunca exponer claves privilegiadas en el frontend.
 - **Autenticación:** Magic Link solo para correos del dominio `@accenture.com`, configurado por variable de entorno y no eludible desde el cliente.
 - **Ubicación:** API nativa de geolocalización del navegador + Supabase Realtime; solo el conductor transmite y solo durante un trayecto activo.
-- **Hosting:** frontend estático en Vercel o Netlify (capa gratuita) con despliegue continuo desde el repositorio de la organización.
-- **Cuentas:** GitHub, Supabase y hosting administrados con un correo corporativo genérico; nada depende de cuentas personales.
-- **Configuración:** `.env.example` documenta URL y clave pública de Supabase, dominio permitido y coordenadas de Panoramis; los secretos no se versionan. `MAINTENANCE.md` documenta estructura, administración y traspaso.
-- **Coste cero:** solo servicios gratuitos sin tarjeta de crédito; sin contenedores ni servidores propios.
+- **Hosting:** frontend estático en Vercel o Netlify; revisar límites y condiciones del plan gratuito.
+- **Configuración:** `.env.example` documenta URL y clave pública de Supabase, dominio permitido y coordenadas de Panoramis. Las tarifas y el parking son configuración funcional administrable, no secretos ni variables de entorno.
+- **Costes:** no incorporar servicios de pago ni proveedor de pagos sin aprobación expresa de coste y modelo operativo.
 
 ## Backlog
-- [x] 1a. Como responsable de IT, quiero clonar el repositorio oficial, configurar el entorno a partir de `.env.example` siguiendo `MAINTENANCE.md` y ver Blaccent funcionando en local conectada a Supabase, para poder mantenerla sin depender de nadie.
-- [ ] 1b. Como responsable de IT, quiero que cada cambio en la rama principal del repositorio de la organización se publique automáticamente en Vercel o Netlify con cuentas corporativas, para operarla sin coste ni cuentas personales. Requires: #1a
-- [ ] 2. Como conductor, quiero entrar con un Magic Link que solo se envía a correos `@accenture.com` y publicar un trayecto a Panoramis con fecha, hora y plazas que mis compañeros puedan ver, para empezar a compartir coche. Requires: #1
-- [ ] 3. Como conductor, quiero cambiar Panoramis por otro destino final al publicar, para ofrecer trayectos a otros sitios. Requires: #2
-- [ ] 4. Como conductor, quiero que la app estime por defecto el gasto del viaje según la distancia por carretera al destino final, para no tener que calcularlo yo. Requires: #2
-- [ ] 5. Como conductor, quiero poner a mano el importe total en lugar del estimado, para ajustarlo a mi gasto real. Requires: #4
-- [ ] 6. Como responsable de IT, quiero configurar las tarifas y los supuestos de la estimación, para que sean explícitos y no se tomen por un coste exacto. Requires: #4
-- [ ] 7. Como conductor, quiero elegir al publicar dónde aparcaré: en el garaje (con aviso del coste estimado de 4 € descontado de nómina y enlace a Accenture Places, https://support-places.accenture.com), en otro sitio que yo indico, o sin especificar, para organizar el aparcamiento a mi manera. Requires: #2
-- [ ] 8. Como pasajero, quiero pedir una plaza en un trayecto y ver mi aportación antes de hacerlo, para saber cuánto pagaré. Requires: #4
-- [ ] 9. Como conductor, quiero aceptar o denegar cada solicitud y que el pasajero vea el resultado en la app, para que ninguna plaza se confirme sin mi aprobación. Requires: #8
-- [ ] 10. Como pasajero o conductor, quiero cancelar mi reserva o mi trayecto con al menos 24 h de antelación, liberando la plaza sin penalización, para no dejar colgados a mis compañeros. Requires: #9
-- [ ] 11. Como pasajero o conductor, quiero que, si faltan menos de 24 h, la app me avise de que ya no puedo cancelar en plazo y de sus consecuencias, y que si confirmo se cancele igualmente y quede registrado como cancelación fuera de plazo, para decidir sabiendo lo que implica. Requires: #10
-- [ ] 12. Como conductor, quiero pulsar "Iniciar trayecto" para empezar a emitir mi ubicación en vivo, después de que se me informe y dé permiso al navegador, y "Finalizar trayecto" para dejar de emitirla, para controlar cuándo se comparte. Requires: #9
-- [ ] 13. Como pasajero aceptado, quiero ver la ubicación en vivo del conductor mientras el trayecto está activo, para saber cuándo llega, y que nadie fuera del trayecto pueda verla. Requires: #12
-- [ ] 14. Como conductor que revisa una solicitud, o como pasajero que pide plaza, quiero ver el historial de la otra persona (por ejemplo, "8 viajes completados · 1 cancelación fuera de plazo"), visible solo en ese momento y en el que cada cancelación fuera de plazo deja de contar a los 30 días, para saber si suele cumplir sin penalizar a nadie para siempre. Requires: #11, #12
-- [ ] 15. Como empleado, quiero instalar Blaccent como app en mi móvil, para abrirla rápido. Requires: #2
+- [x] 1a. Como responsable de IT, quiero clonar el repositorio oficial, configurar el entorno a partir de `.env.example` siguiendo `MAINTENANCE.md` y ver Blaccent funcionando en local conectada a Supabase, para poder mantenerla.
+- [ ] 1b. Como responsable de IT, quiero que cada cambio aprobado en la rama principal se publique automáticamente en el hosting autorizado, para operar la aplicación de forma mantenible. Requires: #1a
+- [ ] 2. Como empleado, quiero autenticarme con mi correo corporativo y publicar un desplazamiento a la oficina de Panoramis indicando fecha, horarios, plazas y tramos ofrecidos, para compartir un viaje que ya tengo previsto.
+- [ ] 3. Como pasajero, quiero consultar viajes y solicitar solo ida, solo vuelta o ida y vuelta, para elegir únicamente los tramos que necesito. Requires: #2
+- [ ] 4. Como conductor, quiero aceptar o rechazar cada solicitud y que las plazas se actualicen por tramo, para controlar quién viaja conmigo. Requires: #3
+- [ ] 5. Como pasajero, quiero ver la aportación orientativa por distancia y su reducción proporcional cuando se alcance el límite de gastos compartibles, para conocer el importe del desplazamiento antes de solicitar plaza. Requires: #3
+- [ ] 6. Como conductor, quiero seleccionar Panoramis, Interparking o aparcamiento gratuito y que los pasajeros vean y acepten su parte del parking antes de confirmar, para compartir únicamente ese gasto. Requires: #2
+- [ ] 7. Como pasajero o conductor, quiero cancelar conforme a una política visible y aceptada, para conocer las consecuencias y liberar plazas correctamente. Requires: #4
+- [ ] 8. Como pasajero, quiero recibir los ajustes o reembolsos de parking que correspondan sin aumentos unilaterales de importes confirmados, para que el reparto refleje el coste aplicable. Requires: #6, #7
+- [ ] 9. Como conductor, quiero iniciar y finalizar el seguimiento de ubicación durante cada trayecto, para compartir mi posición solo cuando corresponda. Requires: #4
+- [ ] 10. Como pasajero aceptado, quiero consultar la ubicación del conductor durante el tramo activo, para coordinar la recogida. Requires: #9
+- [ ] 11. Como empleado, quiero consultar el historial pertinente de viajes y cumplimiento de otros participantes, para disponer de señales de confianza con privacidad. Requires: #7
+- [ ] 12. Como responsable de administración, quiero configurar tarifas por distancia, los 4 € estimados de Panoramis, las tarifas de Interparking y la política aprobada, para mantener las reglas sin modificar código.
+- [ ] 13. Como pasajero, quiero realizar aportaciones y recibir reembolsos mediante un modelo de pagos validado legal y económicamente, para compartir gastos de forma transparente. Requires: #5, #6, #7
+- [ ] 14. Como conductor, quiero publicar desplazamientos recurrentes y permitir reservas en fechas concretas, para organizar mis viajes habituales.
+- [ ] 15. Como empleado, quiero instalar Blaccent como PWA en mi móvil, para acceder fácilmente.
 
-Marca cada historia como `- [x]` cuando esté finalizada.
+Marca cada historia como `- [x]` solo cuando esté finalizada y verificada. No implementes requisitos pendientes como si estuvieran aprobados.
