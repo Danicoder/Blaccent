@@ -158,7 +158,7 @@ El panel de administración deberá permitir:
 - Configurar tarifas base por distancia.
 - Configurar los importes estimados de Panoramis (2 € por ida y 2 € por vuelta; 4 € ambos tramos en la misma jornada).
 - Mantener tarifas y modalidades de Interparking.
-- Gestionar la regla de cancelación de dos horas y su configuración operativa cuando se cierre la decisión sobre cancelaciones tardías.
+- Permitir cancelar hasta la hora de salida y clasificar la cancelación según la antelación: ordinaria (dos horas o más) o tardía (menos de dos horas).
 - Consultar los importes estimados y los acuerdos económicos informados; no gestionar pagos ni reembolsos.
 - Consultar estadísticas de uso.
 - Mantener trazabilidad de cambios y vigencia de cada configuración.
@@ -190,9 +190,9 @@ No se añadirá una comisión de reserva sin aprobación expresa. Los servicios 
 1. Definir conceptos admisibles y evidencia de los gastos reales compartibles.
 2. Definir unidad de cálculo del límite proporcional: por trayecto, jornada o vehículo.
 3. Definir cómo se resuelve el exceso del coste real del parking cuando un pasajero no acepta pagarlo.
-4. Aprobar plazo y consecuencias de cancelación.
-5. Aprobar retención y visibilidad del historial de cancelaciones.
-6. Definir modelo de pagos, comisiones y liquidaciones.
+4. Definir la ventana temporal y el procedimiento para revisar o corregir una ausencia registrada por el conductor.
+5. Definir la fórmula numérica, los umbrales y la visibilidad del indicador de fiabilidad, manteniendo un impacto mayor para las ausencias que para las cancelaciones tardías.
+6. Definir el procedimiento técnico de eliminación o anonimización de cancelaciones y ausencias al cumplir seis meses.
 7. Definir fuente y método de cálculo de distancia por carretera.
 8. Confirmar reglas de recurrencia y reservas de días concretos.
 
@@ -232,7 +232,7 @@ Una vez confirmada una plaza, las condiciones económicas aceptadas no podrán e
 ## Gestión de cancelaciones
 
 ### RF-005. Cancelación por parte del pasajero
-El sistema permitirá al pasajero cancelar su participación en un trayecto hasta dos horas antes de la hora de salida programada.
+El sistema permitirá al pasajero cancelar su participación en cualquier momento antes de la hora de salida programada. Las cancelaciones con al menos dos horas de antelación se registrarán como ordinarias; las realizadas con menos de dos horas se permitirán y se registrarán como tardías.
 
 Las cancelaciones con menos de dos horas de antelación también están permitidas; se registran como tardías conforme a RF-008.
 
