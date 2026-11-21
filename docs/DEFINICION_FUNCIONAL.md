@@ -128,11 +128,11 @@ Principios recomendados para la política:
 
 ### 6.3 Decisiones que debe confirmar el propietario del producto
 
-- Plazo de corte para cancelar sin consecuencias.
-- Tratamiento económico después del plazo.
-- Si existen gastos no reembolsables y cómo se acreditan.
-- Si las cancelaciones tardías afectan temporalmente al indicador de historial y durante cuánto tiempo.
-- Qué ocurre si la cancelación reduce las participaciones y deja un coste de parking no recuperable.
+- Confirmar si una cancelación dentro de las últimas dos horas se bloquea o se permite y marca como tardía.
+- Definir quién registra una ausencia, cuándo puede hacerlo y cómo puede revisarse un registro incorrecto.
+- Definir fórmula, ponderaciones y visibilidad del indicador de fiabilidad.
+- Definir el procedimiento técnico de eliminación o anonimización al cumplir seis meses.
+- Definir cómo se informa de cualquier acuerdo económico externo sin procesar pagos en Blaccent.
 
 ## 7. Ubicación en vivo e historial
 
@@ -147,7 +147,7 @@ Se mantienen ambas funcionalidades.
 **Historial**
 - Se conserva historial de desplazamientos y cancelaciones para aportar contexto de confianza.
 - El acceso debe limitarse a los casos y usuarios autorizados.
-- La duración de conservación y visibilidad de cancelaciones tardías queda pendiente de aprobación.
+- Los registros de cancelaciones y ausencias se conservan durante seis meses desde que ocurren. La fórmula y la visibilidad del indicador de fiabilidad quedan pendientes de definición.
 
 ## 8. Administración
 
@@ -157,7 +157,7 @@ El panel de administración deberá permitir:
 - Configurar tarifas base por distancia.
 - Configurar los importes estimados de Panoramis (2 € por ida y 2 € por vuelta; 4 € ambos tramos en la misma jornada).
 - Mantener tarifas y modalidades de Interparking.
-- Gestionar la política de cancelación una vez aprobada.
+- Gestionar la regla de cancelación de dos horas y su configuración operativa cuando se cierre la decisión sobre cancelaciones tardías.
 - Consultar los importes estimados y los acuerdos económicos informados; no gestionar pagos ni reembolsos.
 - Consultar estadísticas de uso.
 - Mantener trazabilidad de cambios y vigencia de cada configuración.
