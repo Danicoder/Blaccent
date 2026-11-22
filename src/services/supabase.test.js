@@ -1,5 +1,9 @@
 import { describe, it, expect, vi, afterEach } from 'vitest'
-import { checkSupabaseConnection } from './supabase.js'
+import {
+  checkSupabaseConnection,
+  isAllowedAccentureEmail,
+  signInWithOtp,
+} from './supabase.js'
 
 afterEach(() => {
   vi.unstubAllGlobals()
@@ -16,5 +20,16 @@ describe('checkSupabaseConnection', () => {
     vi.stubGlobal('fetch', vi.fn().mockResolvedValue({ ok: false, status: 401 }))
 
     await expect(checkSupabaseConnection()).rejects.toThrow('401')
+  })
+})
+
+describe('Accenture Magic Link', () => {
+  it('accepta únicamente direcciones del dominio configurado', () => {
+    expect(isAllowedAccentureEmail('empleado@accenture.com')).toBe(true)
+    expect(isAllowedAccentureEmail('empleado@gmail.com')).toBe(false)
+  })
+
+  it('rechaza el acceso por OTP antes de llamar a Supabase', async () => {
+    await expect(signInWithOtp('empleado@gmail.com')).rejects.toThrow('@accenture.com')
   })
 })

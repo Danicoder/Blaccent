@@ -6,6 +6,11 @@ import { checkSupabaseConnection } from '../services/supabase.js'
 
 vi.mock('../services/supabase.js', () => ({
   checkSupabaseConnection: vi.fn(),
+  getCurrentSession: vi.fn().mockResolvedValue(null),
+  publishTrip: vi.fn(),
+  signInWithOtp: vi.fn(),
+  signOut: vi.fn(),
+  supabase: { auth: { onAuthStateChange: vi.fn() } },
 }))
 
 describe('App', () => {
