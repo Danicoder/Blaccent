@@ -46,7 +46,7 @@ La fuente de verdad de principios y restricciones es [`constitution.md`](./const
 - [x] 1a. Como responsable de IT, quiero clonar el repositorio oficial, configurar el entorno a partir de `.env.example` siguiendo `MAINTENANCE.md` y ver Blaccent funcionando en local conectada a Supabase, para poder mantenerla.
 - [ ] 1b. Como responsable de IT, quiero que los cambios aprobados en la rama principal se publiquen automáticamente en Netlify desde el repositorio autorizado, para operar la aplicación de forma mantenible. Requires: #1a
 - [x] 2. Como empleado, quiero acceder con un Magic Link restringido a `@accenture.com` y publicar un viaje a Panoramis con origen, fecha, horarios, plazas y tramos disponibles, para compartir un desplazamiento que ya tengo previsto.
-- [ ] 3. Como pasajero, quiero buscar viajes por origen y fecha y consultar su disponibilidad por tramo, para elegir el desplazamiento que necesito. Requires: #2
+- [x] 3. Como pasajero, quiero buscar viajes por origen y fecha y consultar su disponibilidad por tramo, para elegir el desplazamiento que necesito. Requires: #2
 - [ ] 4. Como pasajero, quiero ver las estimaciones informativas de desplazamiento y parking y poder retirar mi solicitud si no las acepta, para conocerlas sin que se presenten como una deuda o un gasto real verificado. Requires: #3
 - [ ] 5. Como conductor, quiero aceptar o rechazar cada solicitud y confirmar plazas por separado para ida y vuelta, para controlar quién viaja en cada tramo. Requires: #4
 - [ ] 6. Como pasajero o conductor, quiero cancelar mi reserva o tramo antes de la salida, recibir el aviso y que la cancelación se clasifique según la regla de dos horas, para gestionar cambios sin alterar las condiciones aceptadas por otros pasajeros. Requires: #5
