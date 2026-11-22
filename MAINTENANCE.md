@@ -80,6 +80,25 @@ Los importes anteriores son configuración funcional deseada, no parámetros que
 - En el hosting, las variables se configuran en el panel del proveedor, no en el repositorio.
 - No guardar credenciales privadas, claves `service_role` ni secretos de proveedores en el frontend.
 
+## Despliegue continuo en Netlify
+
+La rama `main` es la única rama que publica automáticamente. El flujo [`deploy-netlify.yml`](./.github/workflows/deploy-netlify.yml) instala dependencias, construye `dist/` y lo publica en producción.
+
+1. Crea un sitio en Netlify dentro de la cuenta corporativa autorizada.
+2. En GitHub, crea las variables públicas:
+   - `VITE_SUPABASE_URL`
+   - `VITE_SUPABASE_ANON_KEY`
+   - `VITE_ALLOWED_EMAIL_DOMAIN`
+   - `VITE_PANORAMIS_LAT`
+   - `VITE_PANORAMIS_LNG`
+3. En GitHub Actions, crea los secretos:
+   - `NETLIFY_AUTH_TOKEN`: token personal o de integración autorizado.
+   - `NETLIFY_SITE_ID`: identificador del sitio Netlify.
+4. Comprueba una ejecución manual con **Run workflow** y verifica que el estado sea exitoso.
+5. Confirma que el dominio configurado y la aplicación muestran los valores públicos de Supabase esperados.
+
+`netlify.toml` define el directorio publicado y redirige todas las rutas SPA a `index.html`. GitHub Actions usa únicamente el token público de Netlify y las variables públicas `VITE_*`; nunca añadas claves `service_role` ni secretos al frontend.
+
 ## Administración de cuentas
 
 | Servicio | Propiedad / estado |
