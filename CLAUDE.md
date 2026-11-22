@@ -38,13 +38,13 @@ La fuente de verdad de principios y restricciones es [`constitution.md`](./const
 - **Seguridad:** políticas RLS de mínimo privilegio en todas las tablas con datos de usuarios, trayectos, reservas, ubicación e historial; nunca exponer claves privilegiadas en el frontend.
 - **Autenticación:** Magic Link solo para correos del dominio `@accenture.com`, configurado por variable de entorno y no eludible desde el cliente.
 - **Ubicación:** API nativa de geolocalización del navegador + Supabase Realtime; solo el conductor transmite y solo durante un trayecto activo.
-- **Hosting:** frontend estático en Vercel o Netlify; revisar límites y condiciones del plan gratuito.
+- **Hosting:** frontend estático en Netlify; revisar límites y condiciones del plan gratuito.
 - **Configuración:** `.env.example` documenta URL y clave pública de Supabase, dominio permitido y coordenadas de Panoramis. Las tarifas y el parking son configuración funcional, no secretos ni variables de entorno.
 - **Pagos:** prohibido integrar pasarelas o proveedores de pago o desarrollar custodia/transferencia/liquidación de fondos.
 
 ## Backlog
 - [x] 1a. Como responsable de IT, quiero clonar el repositorio oficial, configurar el entorno a partir de `.env.example` siguiendo `MAINTENANCE.md` y ver Blaccent funcionando en local conectada a Supabase, para poder mantenerla.
-- [ ] 1b. Como responsable de IT, quiero que los cambios aprobados en la rama principal se publiquen automáticamente en el hosting autorizado, para operar la aplicación de forma mantenible. Requires: #1a
+- [ ] 1b. Como responsable de IT, quiero que los cambios aprobados en la rama principal se publiquen automáticamente en Netlify desde el repositorio autorizado, para operar la aplicación de forma mantenible. Requires: #1a
 - [ ] 2. Como empleado, quiero acceder con un Magic Link restringido a `@accenture.com` y publicar un viaje a Panoramis con origen, fecha, horarios, plazas y tramos disponibles, para compartir un desplazamiento que ya tengo previsto.
 - [ ] 3. Como pasajero, quiero buscar viajes por origen y fecha y consultar su disponibilidad por tramo, para elegir el desplazamiento que necesito. Requires: #2
 - [ ] 4. Como pasajero, quiero ver las estimaciones informativas de desplazamiento y parking y poder retirar mi solicitud si no las acepta, para conocerlas sin que se presenten como una deuda o un gasto real verificado. Requires: #3

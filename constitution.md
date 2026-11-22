@@ -34,7 +34,7 @@ El registro y el acceso se limitan al dominio corporativo configurado. La privac
 Las tarifas por distancia, los importes estimados de parking y la configuración funcional se mantienen de forma administrable y trazable. Los cambios de configuración no alteran importes y condiciones ya aceptados. El frontend se implementa con Vue.js y CSS modular, siguiendo un enfoque mobile-first. La configuración por entorno se documenta mediante `.env.example`; los secretos no se versionan. El repositorio debe incluir `MAINTENANCE.md`.
 
 ### XI. Coste y servicios
-La solución prioriza servicios gratuitos y serverless. Supabase Cloud proporciona PostgreSQL, autenticación y Realtime; el frontend estático se despliega desde el repositorio autorizado en Vercel o Netlify. No se incorporan proveedores ni integraciones de pago, ya que la plataforma no debe gestionar transferencias económicas.
+La solución prioriza servicios gratuitos y serverless. Supabase Cloud proporciona PostgreSQL, autenticación y Realtime; el frontend estático se despliega desde el repositorio autorizado en Netlify, sujeto a verificar los límites y condiciones del plan gratuito. No se incorporan proveedores ni integraciones de pago, ya que la plataforma no debe gestionar transferencias económicas.
 
 ## Requisitos funcionales y de plataforma
 
@@ -56,7 +56,7 @@ La solución prioriza servicios gratuitos y serverless. Supabase Cloud proporcio
 - **Ubicación en vivo:** geolocalización del navegador y Supabase Realtime durante trayectos activos; solo el conductor transmite y solo participantes autorizados consultan.
 - **Administración:** gestión de usuarios, viajes, reservas, tarifas, importes estimados de parking y consulta del historial conforme a los permisos.
 - **RLS:** toda tabla con información de usuarios, trayectos, reservas, ubicación o historial cuenta con políticas de mínimo privilegio y pruebas de acceso permitido y denegado.
-- **Despliegue:** frontend estático en Vercel o Netlify; se revisan límites y condiciones del nivel gratuito.
+- **Despliegue:** frontend estático en Netlify; se revisan límites y condiciones del nivel gratuito.
 
 ## Flujo de desarrollo y calidad
 
@@ -79,8 +79,10 @@ La solución prioriza servicios gratuitos y serverless. Supabase Cloud proporcio
 
 Toda enmienda debe actualizar este documento, incrementar su versión y registrar motivo y fecha. Las excepciones deben ser explícitas, acotadas y aprobadas.
 
-**Versión**: 1.5.0 | **Ratificada**: 2026-11-21 | **Última enmienda**: 2026-11-22
+**Versión**: 1.6.0 | **Ratificada**: 2026-11-21 | **Última enmienda**: 2026-11-22
 
 **Motivo de la enmienda 1.4.0**: aprobar la fórmula del indicador de fiabilidad, el mínimo de cinco reservas evaluables para mostrarlo y la ventana de diez minutos para que el conductor deshaga una ausencia registrada por error, conservando trazabilidad.
 
 **Motivo de la enmienda 1.5.0 (2026-11-22)**: cerrar las reglas de acceso y eliminación del historial, clasificación de reservas completadas, tratamiento del rechazo/cambio de parking y definir el alcance MVP para gastos, distancia, Interparking y recurrencia. Los cálculos productivos de gastos quedan fuera del MVP hasta validación legal.
+
+**Motivo de la enmienda 1.6.0 (2026-11-22)**: seleccionar Netlify como proveedor de hosting estático para el MVP; verificar sus límites y condiciones del plan gratuito antes del despliegue.

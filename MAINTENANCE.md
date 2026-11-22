@@ -29,7 +29,7 @@ La migración RLS existente debe revisarse antes de almacenar información funci
 |----------|-----|------|
 | GitHub | Repositorio del proyecto | Según administración corporativa |
 | Supabase Cloud | PostgreSQL, autenticación Magic Link y Realtime | Revisar límites del plan gratuito |
-| Vercel o Netlify | Hosting estático y despliegue continuo | Revisar límites del plan gratuito |
+| Netlify | Hosting estático y despliegue continuo | Proveedor elegido; revisar límites del plan gratuito |
 | Pagos | No forman parte del alcance | Acuerdos económicos externos a la plataforma |
 
 Antes de añadir un servicio o dependencia, comprueba que cumple coste, privacidad y administración corporativa (ver constitución). No incorporar proveedores ni integraciones de pago: Blaccent no procesa, custodia ni distribuye fondos.
@@ -86,7 +86,7 @@ Los importes anteriores son configuración funcional deseada, no parámetros que
 |----------|--------------------|
 | Supabase | La cuenta corporativa debe mantener control Owner/administrador. Revisar la titularidad efectiva y transferir el proyecto si depende de una cuenta personal. |
 | GitHub | Confirmar que el repositorio está bajo la organización autorizada. |
-| Vercel / Netlify | Pendiente de definir con administración corporativa. |
+| Netlify | Proveedor elegido; falta configurar el sitio con acceso corporativo y confirmar la titularidad. |
 
 ## Traspaso a otro responsable de IT
 
