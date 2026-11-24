@@ -41,10 +41,12 @@ export async function signInWithOtp(email) {
     throw new Error(`Solo se permiten correos @${allowedEmailDomain}`)
   }
 
+const siteUrl = import.meta.env.VITE_SITE_URL || window.location.origin
+
   const { error } = await supabase.auth.signInWithOtp({
     email: email.trim(),
     options: {
-      emailRedirectTo: window.location.origin,
+      emailRedirectTo: siteUrl,
     },
   })
   if (error) throw error
