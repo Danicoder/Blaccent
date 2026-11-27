@@ -29,7 +29,7 @@ La migración RLS existente debe revisarse antes de almacenar información funci
 |----------|-----|------|
 | GitHub | Repositorio del proyecto | Según administración corporativa |
 | Supabase Cloud | PostgreSQL, autenticación Magic Link y Realtime | Revisar límites del plan gratuito |
-| Netlify | Hosting estático y despliegue continuo | Proveedor elegido; revisar límites del plan gratuito |
+| Cloudflare Pages | Hosting estático y despliegue continuo desde GitHub Actions | Proveedor elegido; revisar límites y condiciones del plan |
 | Pagos | No forman parte del alcance | Acuerdos económicos externos a la plataforma |
 
 Antes de añadir un servicio o dependencia, comprueba que cumple coste, privacidad y administración corporativa (ver constitución). No incorporar proveedores ni integraciones de pago: Blaccent no procesa, custodia ni distribuye fondos.
@@ -77,27 +77,29 @@ Los importes anteriores son configuración funcional deseada, no parámetros que
 
 - `.env` está ignorado por git; nunca se versiona.
 - Las variables `VITE_*` se incluyen en el bundle del navegador: solo pueden contener valores públicos.
-- En el hosting, las variables se configuran en el panel del proveedor, no en el repositorio.
+- Las variables `VITE_*` del despliegue se configuran como variables de GitHub Actions, porque se necesitan durante la compilación; no son variables de ejecución de Cloudflare Pages.
 - No guardar credenciales privadas, claves `service_role` ni secretos de proveedores en el frontend.
 
-## Despliegue continuo en Netlify
+## Despliegue continuo en Cloudflare Pages
 
-La rama `main` es la única rama que publica automáticamente. El flujo [`deploy-netlify.yml`](./.github/workflows/deploy-netlify.yml) instala dependencias, construye `dist/` y lo publica en producción.
+La rama `main` es la única rama que publica automáticamente. El flujo [`deploy-cloudflare-pages.yml`](./.github/workflows/deploy-cloudflare-pages.yml) instala dependencias, construye `dist/` y lo publica en Cloudflare Pages. También se puede ejecutar manualmente desde **Actions > Deploy to Cloudflare Pages > Run workflow**, seleccionando `main`; el trabajo de despliegue se omite en cualquier otra rama.
 
-1. Crea un sitio en Netlify dentro de la cuenta corporativa autorizada.
-2. En GitHub, crea las variables públicas:
+### Preparación de Cloudflare
+
+1. Accede a una cuenta de Cloudflare controlada por la organización autorizada y crea un proyecto de **Workers & Pages > Pages > Direct Upload**. Usa un nombre de proyecto único; será parte de la URL `https://<nombre>.pages.dev`. Si el asistente solicita una primera carga, ejecuta `npm run build` en el repositorio y carga el contenido de `dist/`. Configura `main` como rama de producción.
+2. En **My Profile > API Tokens**, crea un token personalizado restringido a la cuenta correspondiente, con permiso **Account > Cloudflare Pages > Edit**. No necesita permisos de zona DNS para este despliegue.
+3. En GitHub, abre **Settings > Secrets and variables > Actions** y configura las variables del repositorio:
+   - `CLOUDFLARE_ACCOUNT_ID`: identificador de la cuenta Cloudflare (no es un secreto).
+   - `CLOUDFLARE_PAGES_PROJECT`: nombre exacto del proyecto Pages creado.
    - `VITE_SUPABASE_URL`
    - `VITE_SUPABASE_ANON_KEY`
    - `VITE_ALLOWED_EMAIL_DOMAIN`
    - `VITE_PANORAMIS_LAT`
    - `VITE_PANORAMIS_LNG`
-3. En GitHub Actions, crea los secretos:
-   - `NETLIFY_AUTH_TOKEN`: token personal o de integración autorizado.
-   - `NETLIFY_SITE_ID`: identificador del sitio Netlify.
-4. Comprueba una ejecución manual con **Run workflow** y verifica que el estado sea exitoso.
-5. Confirma que el dominio configurado y la aplicación muestran los valores públicos de Supabase esperados.
+4. En la pestaña **Secrets**, crea `CLOUDFLARE_API_TOKEN` con el token del paso anterior. No pegues el token en el código, en el repositorio ni en mensajes; guárdalo únicamente como secreto de GitHub.
+5. Ejecuta el flujo manualmente y verifica que termine correctamente y que `https://<nombre>.pages.dev` carga la aplicación. Después, un push a `main` publicará automáticamente.
 
-`netlify.toml` define el directorio publicado y redirige todas las rutas SPA a `index.html`. GitHub Actions usa únicamente el token público de Netlify y las variables públicas `VITE_*`; nunca añadas claves `service_role` ni secretos al frontend.
+Las variables `VITE_*` se usan durante la compilación y quedan incluidas en el bundle público; solo deben contener valores públicos, nunca claves `service_role`. La regla [`public/_redirects`](./public/_redirects) conserva el enrutamiento SPA a `index.html`. Las credenciales de Cloudflare se usan solo por GitHub Actions y no se incluyen en el frontend. Si se desea un dominio propio, se añade posteriormente desde la configuración del proyecto Pages y se configura su DNS en Cloudflare.
 
 ## Administración de cuentas
 
@@ -105,13 +107,13 @@ La rama `main` es la única rama que publica automáticamente. El flujo [`deploy
 |----------|--------------------|
 | Supabase | La cuenta corporativa debe mantener control Owner/administrador. Revisar la titularidad efectiva y transferir el proyecto si depende de una cuenta personal. |
 | GitHub | Confirmar que el repositorio está bajo la organización autorizada. |
-| Netlify | Proveedor elegido; falta configurar el sitio con acceso corporativo y confirmar la titularidad. |
+| Cloudflare | Cloudflare Pages es el proveedor elegido; falta crear el proyecto con acceso corporativo, añadir las variables y el secreto de Actions, y verificar el primer despliegue. |
 
 ## Traspaso a otro responsable de IT
 
 - [ ] Confirmar que una cuenta corporativa autorizada tiene privilegios Owner en Supabase.
 - [ ] Confirmar propiedad y permisos del repositorio GitHub.
-- [ ] Configurar hosting con acceso corporativo.
+- [ ] Configurar Cloudflare Pages con acceso corporativo y verificar el despliegue desde GitHub Actions.
 - [ ] Entregar variables de entorno mediante el mecanismo seguro aprobado.
 - [ ] Verificar que el responsable puede ejecutar la aplicación localmente.
 - [ ] Revisar las políticas RLS y los permisos de ubicación antes de habilitar datos reales.

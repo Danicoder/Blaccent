@@ -50,8 +50,9 @@ onMounted(async () => {
   try {
     await checkSupabaseConnection()
     status.value = 'ok'
-    session.value = await getCurrentSession()
-    if (session.value) await loadPublishedTrips()
+    // Subscribe before reading the stored session. Supabase exchanges the
+    // callback code from a Magic Link during client initialization; registering
+    // after getSession() can miss that sign-in event on a cold callback load.
     if (supabase?.auth?.onAuthStateChange) {
       supabase.auth.onAuthStateChange((_event, nextSession) => {
         session.value = nextSession
@@ -63,6 +64,8 @@ onMounted(async () => {
         }
       })
     }
+    session.value = await getCurrentSession()
+    if (session.value) await loadPublishedTrips()
   } catch {
     status.value = 'error'
   }
