@@ -18,7 +18,6 @@ vi.mock('../services/supabase.js', () => ({
   signInWithOtp: vi.fn(),
   signOut: vi.fn(),
   supabase: { auth: { onAuthStateChange: vi.fn() } },
-  devTestMode: false,
 }))
 
 describe('App', () => {

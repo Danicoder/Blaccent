@@ -6,16 +6,14 @@ import {
   getPublishedTrips,
   publishTrip,
   searchTrips,
-  signInWithOtp,
   signOut,
   supabase,
-  devTestMode,
 } from './services/supabase.js'
 
-const status = ref(devTestMode ? 'ok' : 'checking')
-const session = ref(devTestMode ? { user: { email: 'pruebas@accenture.com' } } : null)
-const email = ref('')
-const authMessage = ref('')
+// Magic Link desactivado temporalmente para desarrollo local y despliegues.
+const accessEnabled = false
+const status = ref('checking')
+const session = ref(null)
 const tripMessage = ref('')
 const searchMessage = ref('')
 const publishing = ref(false)
@@ -42,47 +40,41 @@ const search = ref({
 })
 
 onMounted(async () => {
-  if (devTestMode) {
-    await loadPublishedTrips()
-    return
-  }
-
   try {
     await checkSupabaseConnection()
     status.value = 'ok'
-    // Subscribe before reading the stored session. Supabase exchanges the
-    // callback code from a Magic Link during client initialization; registering
-    // after getSession() can miss that sign-in event on a cold callback load.
-    if (supabase?.auth?.onAuthStateChange) {
+    if (accessEnabled) {
+      // Restaurar este bloque al reactivar Magic Link; suscribirse antes de
+      // recuperar sesión para recibir el retorno del enlace de correo.
       supabase.auth.onAuthStateChange((_event, nextSession) => {
         session.value = nextSession
-        if (nextSession) {
-          loadPublishedTrips()
-        } else {
+        if (nextSession) loadPublishedTrips()
+        else {
           publishedTrips.value = []
           selectedTrip.value = null
         }
       })
+      session.value = await getCurrentSession()
+      if (session.value) await loadPublishedTrips()
     }
-    session.value = await getCurrentSession()
-    if (session.value) await loadPublishedTrips()
   } catch {
     status.value = 'error'
   }
 })
 
-async function requestAccess() {
-  authMessage.value = ''
-  try {
-    await signInWithOtp(email.value)
-    authMessage.value = 'Revisa tu correo y abre el enlace para iniciar sesion.'
-  } catch (error) {
-    authMessage.value = error.message
-  }
-}
+// Formulario y envío del Magic Link temporalmente desactivados.
+// Al reactivarlos, restaurar signInWithOtp y esta función:
+// async function requestAccess() {
+//   authMessage.value = ''
+//   try {
+//     await signInWithOtp(email.value)
+//     authMessage.value = 'Revisa tu correo y abre el enlace para iniciar sesion.'
+//   } catch (error) {
+//     authMessage.value = error.message
+//   }
+// }
 
 async function logout() {
-  if (devTestMode) return
   await signOut()
   session.value = null
 }
@@ -152,7 +144,8 @@ function parkingLabel(parking) {
       <template v-else>No se pudo conectar con Supabase. Revisa la configuración del entorno.</template>
     </p>
 
-    <template v-if="status === 'ok' && !session">
+    <!-- Formulario Magic Link desactivado temporalmente en todos los entornos.
+    <template v-if="accessEnabled && status === 'ok' && !session">
       <form :class="$style.card" @submit.prevent="requestAccess">
         <label>
           Correo de Accenture
@@ -162,11 +155,12 @@ function parkingLabel(parking) {
         <p v-if="authMessage" role="status">{{ authMessage }}</p>
       </form>
     </template>
+    -->
 
-    <template v-if="status === 'ok' && session">
-      <div :class="$style.user">
-        <span>{{ devTestMode ? 'Modo de pruebas · sesión simulada' : session.user.email }}</span>
-        <button v-if="!devTestMode" type="button" @click="logout">Cerrar sesion</button>
+    <template v-if="status === 'ok'">
+      <div v-if="session" :class="$style.user">
+        <span>{{ session.user.email }}</span>
+        <button type="button" @click="logout">Cerrar sesion</button>
       </div>
 
       <div :class="$style.tabs" role="tablist" aria-label="Funciones de viajes">
