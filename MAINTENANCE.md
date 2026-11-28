@@ -8,9 +8,14 @@ Guía para que cualquier responsable de IT pueda operar, mantener y traspasar Bl
 |------|-----------|
 | `index.html` | Punto de entrada HTML de la app. |
 | `src/main.js` | Arranque de la aplicación Vue. |
-| `src/App.vue` | Pantalla inicial. |
+| `src/views/App.vue` | Pantalla principal de viajes. |
+| `src/components/TripMap.vue` | Selección del origen y visualización de rutas en Leaflet/OpenStreetMap. |
 | `src/assets/` | Estilos globales y recursos de diseño. |
-| `src/services/supabase.js` | Cliente de Supabase y comprobación de conexión. |
+| `src/services/supabase.js` | Cliente de Supabase, comprobación de conexión y persistencia de favoritos de origen. |
+| `src/services/routing.js` | Consulta OSRM para calcular distancias por tramo. |
+| `src/services/geocoding.js` | Búsqueda explícita de direcciones de origen con Nominatim y caché en memoria. |
+| `src/services/requestLimiter.js` | Limita a una por segundo las consultas a cada servicio. |
+| `src/services/estimates.js` | Estimaciones informativas de desplazamiento y parking. |
 | `src/views/`, `src/components/`, `src/router/`, `src/store/` | Estructura prevista para las siguientes historias del backlog. |
 | `supabase/` | Migraciones SQL y políticas RLS de la base de datos. |
 | `public/` | Recursos estáticos de la PWA. |
@@ -19,7 +24,7 @@ Guía para que cualquier responsable de IT pueda operar, mantener y traspasar Bl
 
 ## Estado funcional
 
-La aplicación está en fase inicial. La pantalla actual comprueba la conexión con Supabase; no debe considerarse que los flujos de viajes, reservas, estimaciones, parking, ubicación e historial estén implementados por el hecho de aparecer en la documentación. Blaccent no registra ni procesa pagos.
+La aplicación permite buscar y publicar viajes, mostrar estimaciones informativas y calcular distancias por carretera mediante OSRM. La publicación y búsqueda sin sesión solo funcionan en modo local de desarrollo; en producción los servicios requieren una sesión de Supabase. Las reservas, cancelaciones, ubicación en vivo e historial descritos en el alcance siguen necesitando implementación. Blaccent no registra ni procesa pagos.
 
 La migración RLS existente debe revisarse antes de almacenar información funcional. No se debe desplegar información sensible sin políticas probadas.
 
@@ -45,12 +50,22 @@ Requisitos: Node.js 18 o superior.
    - `VITE_SUPABASE_ANON_KEY`: clave pública (publishable/anon). **Nunca** la clave `service_role`.
    - `VITE_ALLOWED_EMAIL_DOMAIN`: `accenture.com`.
    - `VITE_PANORAMIS_LAT` / `VITE_PANORAMIS_LNG`: coordenadas de la oficina de Panoramis.
+   - `VITE_OSRM_BASE_URL`: URL base de un servidor compatible con OSRM; por defecto, `https://routing.openstreetmap.de/routed-car`.
+   - `VITE_NOMINATIM_BASE_URL`: URL base compatible con Nominatim; por defecto, `https://nominatim.openstreetmap.org`.
 4. Arranca: `npm run dev` y abre la URL que indica la consola.
 5. La pantalla inicial debe mostrar **"Conectado con Supabase"**. Si muestra un error, revisa URL y clave pública.
 
 Otros comandos: `npm run build` y `npm run preview`.
 
 > En Windows, si PowerShell bloquea `npm`, usa `npm.cmd`.
+
+## Mapa y cálculo de distancias
+
+Leaflet presenta el mapa estándar de OpenStreetMap con atribución visible y un enlace para corregir datos. El usuario puede buscar explícitamente una dirección, elegir un resultado y ajustar el marcador arrastrándolo o haciendo clic en el mapa. También puede guardar, reutilizar, renombrar y eliminar favoritos privados. En Supabase, `origin_favorites` debe mantener RLS para que cada usuario solo acceda a sus propios registros; el modo demo guarda esos favoritos únicamente en el navegador. OSRM devuelve una distancia independiente por cada tramo ofrecido. Esas distancias alimentan solo las estimaciones informativas de la aplicación. Mantener el uso de mosaicos por HTTPS, conservar la atribución, respetar las cabeceras de caché del servicio y no hacer scraping ni descargas masivas.
+
+El endpoint predeterminado es el servicio público FOSSGIS (`routing.openstreetmap.de`). Su política vigente limita el uso a una solicitud por segundo y prohíbe el uso intensivo; no ofrece garantías de disponibilidad ni latencia. Las coordenadas de ruta se envían al servidor y se conservan en sus logs conforme a su política de privacidad. Antes de desplegar, confirmar las condiciones vigentes y, si el uso previsto no encaja, configurar una instancia/proveedor OSRM apropiado mediante `VITE_OSRM_BASE_URL`. No usar el servidor público para tráfico de producción sin validar previamente el uso aceptable.
+
+La búsqueda opcional de direcciones usa Nominatim solo cuando el usuario pulsa «Buscar en el mapa» (no hay autocompletado), ofrece hasta cinco resultados y cachea hasta 128 búsquedas durante la sesión. Al seleccionar un punto en el mapa o soltar el marcador, también se consulta la dirección inversa para actualizar el campo; no se consulta durante el arrastre. Las búsquedas y consultas inversas comparten el intervalo local de un segundo y usan cachés separados. Se configura con `VITE_NOMINATIM_BASE_URL`; `referrerPolicy: strict-origin-when-cross-origin` hace que el navegador identifique el sitio mediante la cabecera `Referer` (no se puede establecer manualmente `User-Agent` desde JavaScript del navegador). La política pública cuenta el límite de una solicitud por segundo para toda la aplicación, no por usuario: la limitación cliente evita ráfagas locales, pero no garantiza el límite agregado entre usuarios. Antes de desplegar, verificar si el uso previsto cumple la política y aplicar el mecanismo compartido o proveedor adecuado si se necesita; la baja escala no sustituye la verificación de términos. Las direcciones y coordenadas se envían al proveedor; no introducir datos personales o confidenciales.
 
 ## Configuración funcional que deberá administrarse
 
@@ -96,6 +111,8 @@ La rama `main` es la única rama que publica automáticamente. El flujo [`deploy
    - `VITE_ALLOWED_EMAIL_DOMAIN`
    - `VITE_PANORAMIS_LAT`
    - `VITE_PANORAMIS_LNG`
+   - `VITE_OSRM_BASE_URL` (opcional; si se omite usa el endpoint público documentado arriba)
+   - `VITE_NOMINATIM_BASE_URL` (opcional; si se omite usa el endpoint público documentado arriba)
 4. En la pestaña **Secrets**, crea `CLOUDFLARE_API_TOKEN` con el token del paso anterior. No pegues el token en el código, en el repositorio ni en mensajes; guárdalo únicamente como secreto de GitHub.
 5. Ejecuta el flujo manualmente y verifica que termine correctamente y que `https://<nombre>.pages.dev` carga la aplicación. Después, un push a `main` publicará automáticamente.
 

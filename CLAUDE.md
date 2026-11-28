@@ -21,7 +21,7 @@ La fuente de verdad de principios y restricciones es [`constitution.md`](./const
 - El conductor que registró una ausencia puede deshacerla durante los diez minutos siguientes. La corrección deja de computar como ausencia y conserva trazabilidad.
 - Historial detallado: visible solo para el titular y administración autorizada. El indicador agregado se muestra a otros usuarios solo en el contexto de una solicitud o reserva entre ambos. Eventos identificables y sus correcciones se eliminan al cumplir seis meses.
 - Parking del MVP: Panoramis a 2 € estimados por tramo o gratuito. Si el pasajero no acepta el parking, puede retirar la solicitud. Para cambiar el parking de un tramo con reservas, el conductor lo cancela y publica otro con nuevas condiciones; no se alteran importes aceptados.
-- OSRM público es la fuente elegida para distancia por carretera; se guardan las distancias por trayecto y se verifican términos y límites vigentes antes de desplegar la integración.
+- El origen se selecciona manualmente en Leaflet/OpenStreetMap o se geocodifica explícitamente con Nominatim; OSRM calcula las distancias por tramo, que se guardan con el viaje. Verificar los términos y la limitación acumulada de consultas de los servicios públicos antes del despliegue.
 - Interparking y los viajes recurrentes quedan fuera del MVP.
 - Se mantienen ubicación en vivo durante el trayecto activo e historial.
 - Blaccent no procesa, custodia ni distribuye pagos y no integra proveedores de pago. Los acuerdos económicos se realizan fuera de la plataforma.
